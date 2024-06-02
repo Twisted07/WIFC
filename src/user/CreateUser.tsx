@@ -1,10 +1,9 @@
-import { IUser, createUser } from "../services/apiUser"
+import { createUser } from "../services/apiUser";
 
 function CreateUser() {
+  console.log(createUser);
 
-  return (
-    <div>CreateUser</div>
-  )
+  return <div>CreateUser</div>;
 }
 
-export default CreateUser
+export default CreateUser;
