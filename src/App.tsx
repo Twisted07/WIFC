@@ -10,6 +10,9 @@ import Signin from "./ui/Signin";
 import Signup from "./ui/Signup";
 
 function App() {
+
+  const QueryClient = 
+
   return (
     <BrowserRouter>
     <Suspense fallback={<FullSpinner />}>
