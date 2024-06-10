@@ -11,6 +11,7 @@ export async function getComments() {
   return Comment;
 }
 
+
 export async function createComment() {
   const { data, error } = await supabase
     .from("Comment")
@@ -24,6 +25,7 @@ export async function createComment() {
 
   return data;
 }
+
 
 export async function updateComment() {
   const { data, error } = await supabase
@@ -39,6 +41,7 @@ export async function updateComment() {
 
   return data;
 }
+
 
 export async function deleteComment() {
   const { error } = await supabase
