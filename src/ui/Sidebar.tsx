@@ -1,8 +1,5 @@
-
 function Sidebar() {
-  return (
-    <div>Sidebar</div>
-  )
+  return <div className="w-[20%] bg-slate-500">Sidebar</div>;
 }
 
-export default Sidebar
+export default Sidebar;
