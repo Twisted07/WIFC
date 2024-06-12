@@ -1,8 +1,9 @@
-
-function Button() {
+function Button({ children }) {
   return (
-    <div>Button</div>
-  )
+    <button className="bg-slate-500 py-[10px] px-[60px] rounded-[10px] text-[18px] text-white">
+      {children}
+    </button>
+  );
 }
 
-export default Button
+export default Button;
