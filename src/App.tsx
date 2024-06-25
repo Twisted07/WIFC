@@ -33,7 +33,8 @@ function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Navigate replace to="suggestions" />} />
               <Route path="suggestions" element={<SuggestionList />} />
-              <Route path="suggestions/:id" element={<ViewSuggestion />} />
+              <Route path="suggestions/view" element={<ViewSuggestion />} />
+              {/* <Route path="suggestions/:id" element={<ViewSuggestion />} /> */}
             </Route>
 
             <Route element={<BasicLayout />}>

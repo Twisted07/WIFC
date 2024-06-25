@@ -11,11 +11,15 @@ import React from "react";
 // }
 
 function Card({image, name} : ISuggestion) {
+  function handleClick() {
+    location.href = 'suggestions/view';
+  }
+
   return (
-    <div className="w-[15rem] flex flex-col justify-center items-center">
+    <button onClick={handleClick} className="w-[15rem] flex flex-col justify-center items-center">
       <div className="w-full h-[15rem] bg-stone-300">{image}</div>
       <div className="w-full h-[2rem] text-white bg-stone-500">{name}</div>
-    </div>
+    </button>
   );
 }
 
