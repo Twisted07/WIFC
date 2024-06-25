@@ -3,9 +3,9 @@ import supabase from "./supabase";
 export interface ISuggestion {
     image: string,
     name: string,
-    description: string,
-    recipe: string,
-    userID: number | string,
+    description?: string,
+    recipe?: string,
+    userID?: number | string,
 }
 
 
