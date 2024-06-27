@@ -1,20 +1,23 @@
 import supabase from "./supabase";
 
-export async function getComments() {
-  const { data: Comment, error } = await supabase.from("Comment").select("*");
+export async function getReviews(suggestionID : Number) {
+  const { data: Review, error } = await supabase
+  .from("Review")
+  .select()
+  .eq('suggestionID', suggestionID);
 
   if (error) {
     console.error("There was an issue fetching comments");
     throw new Error(error.message);
   }
 
-  return Comment;
+  return Review;
 }
 
 
-export async function createComment() {
+export async function createReview() {
   const { data, error } = await supabase
-    .from("Comment")
+    .from("Review")
     .insert([{ some_column: "someValue", other_column: "otherValue" }])
     .select();
 
@@ -27,9 +30,9 @@ export async function createComment() {
 }
 
 
-export async function updateComment() {
+export async function updateReview() {
   const { data, error } = await supabase
-    .from("Comment")
+    .from("Review")
     .update({ other_column: "otherValue" })
     .eq("some_column", "someValue")
     .select();
@@ -45,12 +48,12 @@ export async function updateComment() {
 
 export async function deleteComment() {
   const { error } = await supabase
-    .from("Comment")
+    .from("Review")
     .delete()
     .eq("some_column", "someValue");
 
   if (error) {
-    console.error("There was an issue deleting comment");
+    console.error("There was an issue deleting Review");
     throw new Error(error.message);
   }
 }
