@@ -1,6 +1,7 @@
 import { getReviews } from "@/services/apiReview";
 import { getSuggestion } from "@/services/apiSuggestion";
 import { IUser } from "@/services/apiUser";
+import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react"
 import { useParams } from "react-router-dom";
@@ -38,7 +39,8 @@ function ViewSuggestion() {
     toggleVisible();
   }
 
-  function handleCancel() {
+  function handleCancel(e : any) {
+    e.preventDefault();
     setReview("");
     toggleVisible();
   }
@@ -54,21 +56,28 @@ function ViewSuggestion() {
     queryFn: () => getReviews(Number(id)),
   })
 
-  console.log(suggestion);
+  // const {data: suggestions} = useQuery({
+  //   queryKey: ['suggestions'],
+  // })
+
+  console.log(suggestion, 'suggestion');
+  // console.log(suggestions, 'suggestions from previous query');
   console.log(reviews, "reviews");
 
   if (isLoading) return (<h1>Loading...</h1>);
+  if (error) return (<h2>An error occurred while loading this page.</h2>);
+
   
   return (
     <div>
       {!suggestion ? (<h1>An error occurred while fetching data</h1>) :
         <>
           <figure>
-            <img src="#" alt="Image" />
-            <figcaption>Suggestion Image</figcaption>
+            <img src={suggestion.image} alt="Image" />
+            <figcaption className="text-2xl font-bold">{suggestion.name}</figcaption>
           </figure>
 
-          <div>
+          <div className="w-[50dvw]">
             <Section title="Description">
               <article>
                 {suggestion.description}
@@ -91,10 +100,10 @@ function ViewSuggestion() {
 
                 <form action="#" hidden={visible}>
                   <textarea name="review-input" value={review} onChange={handleReview} id="review-input" className="block p-3 border border-blue-200 rounded-2xl focus:outline-blue-300" cols={70} rows={7}></textarea>
-                  <button onClick={handleCancel}>Cancel</button>
-                  <button type="submit" onClick={handleSubmit}>Submit Review</button>
+                  <MyButton type="button" onclick={handleCancel} className="mr-2" >Cancel</MyButton>
+                  <MyButton type="submit" onclick={handleSubmit}>Submit Review</MyButton>
                 </form>
-                <button type="button" onClick={toggleVisible} hidden={!visible}>Add Review</button>
+                <MyButton type="button" onclick={toggleVisible} hidden={!visible}>Add Review</MyButton>
               </div>
             </Section>
           </div>
