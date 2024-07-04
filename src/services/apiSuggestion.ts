@@ -1,7 +1,7 @@
-import supabase from "./supabase";
+import supabase, { supabaseUrl } from "./supabase";
 
 export interface ISuggestion {
-    image?: string,
+    image?: any, //TODO: To be modified to the actual data format
     name?: string,
     description?: string,
     recipe?: string,
@@ -42,17 +42,43 @@ export async function getSuggestion(id : number) {
 
 
 export async function createSuggestion(newSuggestionObj : ISuggestion) {
-
+    // https://rgqlfhkkxritdeajtgrw.supabase.co/storage/v1/object/public/suggestion_images/817041839539233-rice_and_beans_mix.png?t=2024-07-04T19%3A33%3A36.615Z
+    
+    let imageURLList = [] as string[];
+    let imageNameList = [] as string[];
+    newSuggestionObj?.image.forEach((image : any) => {
+        // ? Strip the name of any slashes and whitespaces, replacing the whitespaces with underscore
+        
+        const imageName = `${Math.ceil(Math.random() * 1000000000000000)}-${image.name}`.replaceAll("/", "").split(" ").join("_");
+        const imageURL = `${supabaseUrl}/storage/v1/object/public/suggestion_images/${imageName}`;
+        imageURLList = [...imageURLList, imageURL];
+        imageNameList = [...imageNameList, imageName];
+    })
+    
     const { data, error } = await supabase
     .from('Suggestion')
-    .insert([newSuggestionObj])
-    .select()
+    .insert([{...newSuggestionObj, image: imageURLList}])
 
     if (error) {
         console.error("There was a problem creating suggestion.");
         throw new Error(error.message);
     }
 
+
+    imageNameList.forEach(async (img, i) => {
+        const { error: storageError } = await supabase
+        .storage
+        .from('suggestion_images')
+        .upload(img, newSuggestionObj.image[i])
+
+        if (storageError) {
+            await supabase.from("Suggestion").delete().eq("name", newSuggestionObj.name);
+            console.error(storageError);
+            throw new Error("Storage failed. Suggestion deleted");
+        }
+    })
+
+    
     return data;
 
 }

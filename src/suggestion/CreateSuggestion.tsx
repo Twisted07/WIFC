@@ -1,3 +1,4 @@
+import { createSuggestion } from "@/services/apiSuggestion";
 import MyButton from "@/ui/MyButton";
 import { useState } from "react";
 
@@ -8,6 +9,11 @@ function CreateSuggestion() {
   const [description, setDescription] = useState("");
   const [recipe, setRecipe] = useState("");
 
+  /** TODO:
+    * validate data
+    * collate all the data into a single object
+    * post data to database
+  */
 
   async function handleFileChange(e : any) {
     console.log(e.target.files, "file event");
@@ -18,7 +24,6 @@ function CreateSuggestion() {
     
     for (let i = 0; i < files.length; i++) {
       setImage(img => [...img, files[i]]);
-      console.log(i);
     }
   }
 
@@ -55,7 +60,10 @@ function CreateSuggestion() {
       recipe,
     };
 
-    console.log(newSuggestionObj);
+    console.log(newSuggestionObj, "new suggestion object");
+
+    createSuggestion(newSuggestionObj);
+
   }
 
 
