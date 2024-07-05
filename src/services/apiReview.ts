@@ -1,6 +1,13 @@
 import supabase from "./supabase";
 
-export async function getReviews(suggestionID : Number) {
+export interface IReview {
+  reviewerID : number,
+  message : string,
+  suggestionID : number,
+
+}
+
+export async function getReviews(suggestionID : (IReview['suggestionID'])) {
   const { data: Review, error } = await supabase
   .from("Review")
   .select()
@@ -15,11 +22,11 @@ export async function getReviews(suggestionID : Number) {
 }
 
 
-export async function createReview() {
+export async function createReview(reviewObj: IReview) {
   const { data, error } = await supabase
     .from("Review")
-    .insert([{ some_column: "someValue", other_column: "otherValue" }])
-    .select();
+    .insert([reviewObj])
+    // .select();
 
   if (error) {
     console.error("There was an issue creating comment");

@@ -18,7 +18,7 @@ function SuggestionList() {
   return (
     <>
       <div className="flex gap-[3rem] flex-wrap">
-        {suggestions?.map(suggestion => suggestion.name ? (<Link to={`${suggestion.id}`} key={suggestion.id}><MyCard name={suggestion.name} image={suggestion.image} userID={suggestion.userID} id={suggestion.id} /></Link>) : null)}
+        {suggestions?.map(suggestion => suggestion.name ? (<Link to={`${suggestion.id}`} key={suggestion.id}><MyCard name={suggestion.name} image={suggestion.image[0]} userID={suggestion.userID} id={suggestion.id} /></Link>) : null)}
       </div>
 
       <Link to={"create"}><MyButton>Add Suggestion</MyButton></Link>

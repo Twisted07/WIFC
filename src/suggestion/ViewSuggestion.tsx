@@ -1,4 +1,4 @@
-import { getReviews } from "@/services/apiReview";
+import { createReview, getReviews } from "@/services/apiReview";
 import { getSuggestion } from "@/services/apiSuggestion";
 import { IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
@@ -34,9 +34,18 @@ function ViewSuggestion() {
   function handleSubmit(e : any) {
     e.preventDefault();
     if (!review) return;
-    console.log(review);
+
+    const newReviewObj = {
+      reviewerID : 2,
+      message : review,
+      suggestionID : Number(id),
+    };
+    createReview(newReviewObj);
+
     setReview("");
     toggleVisible();
+
+    location.reload();
   }
 
   function handleCancel(e : any) {
@@ -69,11 +78,17 @@ function ViewSuggestion() {
 
   
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center text-center">
       {!suggestion ? (<h1>An error occurred while fetching data</h1>) :
         <>
-          <figure>
-            <img src={suggestion.image} alt="Image" />
+          <figure className="mb-16">
+            <div className="flex items-center justify-start w-full gap-3 mb-5">
+            {
+              suggestion.image.map((img : string) => (
+                <img src={img} alt={`${suggestion.name} image`} key={img} className="bg-center bg-cover" />
+              ))
+            }
+            </div>
             <figcaption className="text-2xl font-bold">{suggestion.name}</figcaption>
           </figure>
 
@@ -103,7 +118,7 @@ function ViewSuggestion() {
                   <MyButton type="button" onclick={handleCancel} className="mr-2" >Cancel</MyButton>
                   <MyButton type="submit" onclick={handleSubmit}>Submit Review</MyButton>
                 </form>
-                <MyButton type="button" onclick={toggleVisible} hidden={!visible}>Add Review</MyButton>
+                <MyButton type="button" className="mt-16" onclick={toggleVisible} hidden={!visible}>Add Review</MyButton>
               </div>
             </Section>
           </div>
