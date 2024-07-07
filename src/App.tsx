@@ -6,8 +6,7 @@ import SuggestionList from "./suggestion/SuggestionList";
 import ViewSuggestion from "./suggestion/ViewSuggestion";
 import AppLayout from "./ui/AppLayout";
 import FullSpinner from "./ui/FullSpinner";
-import Signin from "./ui/Signin";
-import Signup from "./ui/Signup";
+import Signin from "./user/Signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -39,7 +38,6 @@ function App() {
 
             <Route element={<BasicLayout />}>
               <Route path="suggestions/create" element={<CreateSuggestion />} />
-              <Route path="signup" element={<Signup />} />
               <Route path="signin" element={<Signin />} />
             </Route>
           </Routes>

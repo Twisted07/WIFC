@@ -2,7 +2,9 @@ import { Outlet } from "react-router-dom"
 
 function BasicLayout() {
   return (
-    <div><Outlet /></div>
+    <div className="flex flex-col items-center">
+      <Outlet />
+    </div>
   )
 }
 
