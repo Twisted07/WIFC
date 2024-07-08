@@ -4,7 +4,7 @@ import { IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react"
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ViewSuggestion() {
 
@@ -21,39 +21,7 @@ function ViewSuggestion() {
   const [visible, setVisible] = useState(true);
   const [review, setReview] = useState("");
   const {id} = useParams();
-
-
-  function toggleVisible() {
-    setVisible((v) => v = !v);
-  }
-
-  function handleReview(e : any) {
-    setReview(e.target.value);
-  }
-
-  function handleSubmit(e : any) {
-    e.preventDefault();
-    if (!review) return;
-
-    const newReviewObj = {
-      reviewerID : 2,
-      message : review,
-      suggestionID : Number(id),
-    };
-    createReview(newReviewObj);
-
-    setReview("");
-    toggleVisible();
-
-    location.reload();
-  }
-
-  function handleCancel(e : any) {
-    e.preventDefault();
-    setReview("");
-    toggleVisible();
-  }
-
+  const navigate = useNavigate();
 
   const {isLoading, data:suggestion, error} = useQuery({
     queryKey: ['suggestion'],
@@ -65,16 +33,56 @@ function ViewSuggestion() {
     queryFn: () => getReviews(Number(id)),
   })
 
-  // const {data: suggestions} = useQuery({
-  //   queryKey: ['suggestions'],
+  // const {isLoading: userLoading, data: user} = useQuery({
+  //   queryKey: ['user'],
   // })
 
-  console.log(suggestion, 'suggestion');
-  // console.log(suggestions, 'suggestions from previous query');
-  console.log(reviews, "reviews");
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  console.log(user);
+
+
+  function toggleVisible() {
+    setVisible((v) => v = !v);
+  }
+
+  function handleReview(e : any) {
+    setReview(e.target.value);
+  }
+
+  async function handleSubmit(e : any) {
+    e.preventDefault();
+    if (!review) return;
+
+    const newReviewObj = {
+      reviewerID : user?.id,
+      message : review,
+      suggestionID : Number(id),
+    };
+    await createReview(newReviewObj).then(
+      res => {
+        setReview("");
+        toggleVisible();
+        console.log(newReviewObj);
+    
+        location.reload();
+      }
+
+    )
+
+  }
+
+  function handleCancel(e : any) {
+    e.preventDefault();
+    setReview("");
+    toggleVisible();
+  }
+
+
+
 
   if (isLoading) return (<h1>Loading...</h1>);
   if (error) return (<h2>An error occurred while loading this page.</h2>);
+  if (!user) navigate('/signin');
 
   
   return (
@@ -109,7 +117,7 @@ function ViewSuggestion() {
               <div>
                 {reviews?.length === 0 ? (<h3>No Reviews Yet.</h3>) : (
                   <ul>
-                    {reviews?.map(review => (<li key={review.id}>{review.message}</li>))}
+                    {reviews?.map(review => (<li key={review.id}>{review.message} <i>By: {review.reviewerID}</i></li>))}
                   </ul>
                 )}
 

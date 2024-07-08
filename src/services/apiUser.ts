@@ -22,12 +22,14 @@ export async function getUsers () {
 }
 
 
-export async function getUser(id : number) {
+export async function getUser(email: IUser['email']) {
     const { data: User, error } = await supabase
     .from('User')
     .select()
-    .eq('id', id)
+    .eq('email', email)
     .single()
+
+    console.log(User, "single user in api");
 
     if (error) {
         console.error("An error was encountered while fetching user.");

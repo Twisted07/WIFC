@@ -1,6 +1,8 @@
 import { createSuggestion } from "@/services/apiSuggestion";
 import MyButton from "@/ui/MyButton";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CreateSuggestion() {
   
@@ -8,7 +10,9 @@ function CreateSuggestion() {
   const [dishName, setDishName] = useState("");
   const [description, setDescription] = useState("");
   const [recipe, setRecipe] = useState("");
+  const navigate = useNavigate();
 
+  const user = JSON.parse(sessionStorage.getItem('user'));
   /** TODO:
     * validate data
     * collate all the data into a single object
@@ -58,42 +62,44 @@ function CreateSuggestion() {
       name: dishName,
       description,
       recipe,
+      userID: user?.id,
     };
 
-    console.log(newSuggestionObj, "new suggestion object");
 
     createSuggestion(newSuggestionObj);
-
+    navigate('/');
   }
 
-
+  if (!user) navigate('/signin');
 
   return (
-    <form>
-      <div>
-        <label htmlFor="suggestion-image">
-          <input type="file" accept="image/*" id="suggestion-image" name="suggestion-image" multiple onChange={handleFileChange} required />
-        </label>
-      </div>
+    <>
+      <form>
+        <div>
+          <label htmlFor="suggestion-image">
+            <input type="file" accept="image/*" id="suggestion-image" name="suggestion-image" multiple onChange={handleFileChange} required />
+          </label>
+        </div>
 
-      <div>
-        <label htmlFor="suggestion-name">Dish Name</label>
-        <input type="text" name="suggestion-name" id="suggestion-name" value={dishName} onChange={handleDishName} placeholder="e.g Rice and Beans" required />
-      </div>
+        <div>
+          <label htmlFor="suggestion-name">Dish Name</label>
+          <input type="text" name="suggestion-name" id="suggestion-name" value={dishName} onChange={handleDishName} placeholder="e.g Rice and Beans" required />
+        </div>
 
-      <div>
-        <label htmlFor="suggestion-description">Description</label>
-        <textarea name="suggestion-description" id="suggestion-description" value={description} onChange={handleDescription} cols={30} rows={10} placeholder="Say something about the dish..." required ></textarea>
-      </div>
-      
-      <div>
-        <label htmlFor="suggestion-recipe">Recipe</label>
-        <textarea name="suggestion-recipe" id="suggestion-recipe" value={recipe} onChange={handleRecipe} cols={30} rows={10} placeholder="Do you know how to prepare the dish? Kindly share your recipe."></textarea>
-      </div>
+        <div>
+          <label htmlFor="suggestion-description">Description</label>
+          <textarea name="suggestion-description" id="suggestion-description" value={description} onChange={handleDescription} cols={30} rows={10} placeholder="Say something about the dish..." required ></textarea>
+        </div>
+        
+        <div>
+          <label htmlFor="suggestion-recipe">Recipe</label>
+          <textarea name="suggestion-recipe" id="suggestion-recipe" value={recipe} onChange={handleRecipe} cols={30} rows={10} placeholder="Do you know how to prepare the dish? Kindly share your recipe."></textarea>
+        </div>
 
-      <MyButton type="button" onclick={handleCancel}>Cancel</MyButton>
-      <MyButton type="submit" onclick={handleSubmit}>Submit Suggestion</MyButton>
-    </form>
+        <MyButton type="button" onclick={handleCancel}>Cancel</MyButton>
+        <MyButton type="submit" onclick={handleSubmit}>Submit Suggestion</MyButton>
+      </form>
+    </>
   )
 }
 

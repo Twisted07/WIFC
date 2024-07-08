@@ -1,16 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { IUser } from "@/services/apiUser";
+import { IUser, createUser, getUser, getUsers } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 function Signin() {
-  const [existingUser, setExistingUser] = useState<Boolean>(false);
+  const [existingUser, setExistingUser] = useState<Boolean | undefined>(true);
   const [userEmail, setUserEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<Boolean>(false);
   const [reveal, setReveal] = useState<Boolean>(false);
+  const [signedIn, setSignedIn] = useState<Boolean>(false);
+  const navigate = useNavigate();
+
 
   function handleEmailInput(e : any) {
     setUserEmail(e.target.value);
@@ -33,26 +38,70 @@ function Signin() {
     setReveal((r) : any => r = !r);
   }
 
-  function handleSubmit(e : any) {
+  function handleSignInSubmit(e : any) {
     e.preventDefault();
-    
-    if (existingUser) {
-      const newObj : IUser = {
-        email: userEmail,
-        password,
-      };
-      console.log(newObj, "user already exists");
-    
-    } else {
-      const newObj : IUser = {
-        name,
-        email: userEmail,
-        password,
-      };
 
-      console.log(newObj, "This is a new user");
+    // Check if the email entered exists in the users table
+    const check = Users?.some((user: IUser) => user.email === userEmail);
+
+    if (!check) {
+      setExistingUser(false);
+      setPassword("");
+
+      return;
+    }
+
+    const userData = Users?.find((user: IUser) => user.email === userEmail);
+    // Validate password
+    if (password !== userData.password) {
+      setError(true);
+      return;
+    }
+    
+    
+    // sessionStorage.clear();
+    // sessionStorage.setItem('user', userData);
+    setError(false);
+    setSignedIn(true);
+  }
+
+
+  function handleSignUpSubmit(e : any) {
+    e.preventDefault();
+
+    const newObj : IUser = {
+      name,
+      email: userEmail,
+      password,
+    };
+
+    createUser(newObj);
+    setSignedIn(true);
+  }
+
+  if (signedIn) {
+    const {isLoading: userLoading, data: currentUser, error: userError} = useQuery({
+      queryKey: ['user'],
+      queryFn: () => getUser(userEmail),
+    });
+
+    if (userLoading) return <h1>Signing In...</h1>
+
+    
+    if (currentUser) {
+      sessionStorage.clear();
+      sessionStorage.setItem('user', JSON.stringify(currentUser));
+      navigate('/');
     }
   }
+
+
+  const {isLoading, data: Users, error: fetchUserError} = useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+  });
+
+
 
   return (
     <div>
@@ -68,11 +117,13 @@ function Signin() {
             <Label htmlFor="password">Password</Label>
             <FormInput type={reveal ? ("text") : ("password")} name="user-password" id="password" value={password} onChange={handlePasswordInput} />
             <button type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
+            {error ? (<span>This password is incorrect</span>) : null}
           </div>
 
-          <MyButton type="submit" onclick={handleSubmit}>Sign in</MyButton>
+          <MyButton type="submit" onclick={handleSignInSubmit}>Sign in</MyButton>
         </form>
       ) : (
+        
         <form action="#">
           <div>
             <Label htmlFor="name">Full Name</Label>
@@ -96,7 +147,7 @@ function Signin() {
             
           </div>
 
-          <MyButton type="submit" onclick={handleSubmit}>Create Account</MyButton>
+          <MyButton type="submit" onclick={handleSignUpSubmit}>Create Account</MyButton>
         </form>
       )}
 
