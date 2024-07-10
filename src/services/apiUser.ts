@@ -1,9 +1,10 @@
 import supabase from "./supabase";
 
 export interface IUser {
+    id?: Number,
     name?: string,
-    email: string,
-    password: string
+    email?: string,
+    password?: string
 }
 
 

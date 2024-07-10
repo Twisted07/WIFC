@@ -1,7 +1,9 @@
+import { GlobalContext } from "@/context";
 import { createSuggestion } from "@/services/apiSuggestion";
+import { IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateSuggestion() {
@@ -11,8 +13,8 @@ function CreateSuggestion() {
   const [description, setDescription] = useState("");
   const [recipe, setRecipe] = useState("");
   const navigate = useNavigate();
+  const {user} = useContext(GlobalContext);
 
-  const user = JSON.parse(sessionStorage.getItem('user'));
   /** TODO:
     * validate data
     * collate all the data into a single object

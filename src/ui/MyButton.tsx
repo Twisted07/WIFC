@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
 
-function MyButton({className, onclick, children} : any) {
+function MyButton({className, onclick, children, hidden} : any) {
   return (
-    <Button className={className} onClick={onclick}>{children}</Button>
+    <Button className={className} onClick={onclick} hidden={hidden}>{children}</Button>
   )
 }
 

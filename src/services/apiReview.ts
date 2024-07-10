@@ -1,9 +1,9 @@
 import supabase from "./supabase";
 
 export interface IReview {
-  reviewerID : number,
+  reviewerID? : Number,
   message : string,
-  suggestionID : number,
+  suggestionID : Number,
 
 }
 

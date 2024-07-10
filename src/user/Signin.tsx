@@ -1,9 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GlobalContext } from "@/context";
 import { IUser, createUser, getUser, getUsers } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 function Signin() {
@@ -15,6 +16,8 @@ function Signin() {
   const [reveal, setReveal] = useState<Boolean>(false);
   const [signedIn, setSignedIn] = useState<Boolean>(false);
   const navigate = useNavigate();
+
+  const { setUser } = useContext(GlobalContext);
 
 
   function handleEmailInput(e : any) {
@@ -58,9 +61,6 @@ function Signin() {
       return;
     }
     
-    
-    // sessionStorage.clear();
-    // sessionStorage.setItem('user', userData);
     setError(false);
     setSignedIn(true);
   }
@@ -87,10 +87,8 @@ function Signin() {
 
     if (userLoading) return <h1>Signing In...</h1>
 
-    
     if (currentUser) {
-      sessionStorage.clear();
-      sessionStorage.setItem('user', JSON.stringify(currentUser));
+      setUser(currentUser);
       navigate('/');
     }
   }

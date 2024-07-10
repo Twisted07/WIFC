@@ -1,9 +1,10 @@
+import { GlobalContext } from "@/context";
 import { createReview, getReviews } from "@/services/apiReview";
 import { getSuggestion } from "@/services/apiSuggestion";
 import { IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 
 function ViewSuggestion() {
@@ -20,8 +21,10 @@ function ViewSuggestion() {
 
   const [visible, setVisible] = useState(true);
   const [review, setReview] = useState("");
-  const {id} = useParams();
   const navigate = useNavigate();
+  
+  const {id} = useParams();
+  const {user} = useContext(GlobalContext);
 
   const {isLoading, data:suggestion, error} = useQuery({
     queryKey: ['suggestion'],
@@ -33,12 +36,6 @@ function ViewSuggestion() {
     queryFn: () => getReviews(Number(id)),
   })
 
-  // const {isLoading: userLoading, data: user} = useQuery({
-  //   queryKey: ['user'],
-  // })
-
-  const user = JSON.parse(sessionStorage.getItem('user'));
-  console.log(user);
 
 
   function toggleVisible() {
@@ -58,6 +55,7 @@ function ViewSuggestion() {
       message : review,
       suggestionID : Number(id),
     };
+    
     await createReview(newReviewObj).then(
       res => {
         setReview("");
@@ -126,7 +124,9 @@ function ViewSuggestion() {
                   <MyButton type="button" onclick={handleCancel} className="mr-2" >Cancel</MyButton>
                   <MyButton type="submit" onclick={handleSubmit}>Submit Review</MyButton>
                 </form>
-                <MyButton type="button" className="mt-16" onclick={toggleVisible} hidden={!visible}>Add Review</MyButton>
+                <div hidden={!visible}>
+                  <MyButton type="button" className="mt-16" onclick={user?.name ? toggleVisible : ()=>navigate('/signin')}>Add Review</MyButton>
+                </div>
               </div>
             </Section>
           </div>

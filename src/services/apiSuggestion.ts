@@ -5,8 +5,8 @@ export interface ISuggestion {
     name?: string,
     description?: string,
     recipe?: string,
-    userID?: number | string,
-    id?: number,
+    userID?: Number,
+    id?: string | Number,
 }
 
 
@@ -43,7 +43,7 @@ export async function getSuggestion(id : number) {
 
 export async function createSuggestion(newSuggestionObj : ISuggestion) {
     // https://rgqlfhkkxritdeajtgrw.supabase.co/storage/v1/object/public/suggestion_images/817041839539233-rice_and_beans_mix.png?t=2024-07-04T19%3A33%3A36.615Z
-    
+
     let imageURLList = [] as string[];
     let imageNameList = [] as string[];
     newSuggestionObj?.image.forEach((image : any) => {
