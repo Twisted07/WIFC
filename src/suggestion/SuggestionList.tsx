@@ -21,13 +21,13 @@ function SuggestionList() {
   }, [isFilter])
 
   return (
-    <>
-      <div className="flex gap-[3rem] flex-wrap">
+    <div className="text-center">
+      <div className="flex gap-7 flex-wrap max-h-[65dvh] overflow-y-scroll">
         {suggestionList?.map((suggestion) => suggestion.name ? (<Link to={`${suggestion.id}`} key={suggestion.id as Key}><MyCard name={suggestion.name} image={suggestion.image[0]} userID={suggestion.userID} id={suggestion.id} /></Link>) : null)}
       </div>
 
-      <Link to={user?.name ? "create" : "/signin"}><MyButton>Add Suggestion</MyButton></Link>
-    </>
+      <Link to={user?.name ? "create" : "/signin"}><MyButton className="mt-20" >Add Suggestion</MyButton></Link>
+    </div>
   )
 }
 

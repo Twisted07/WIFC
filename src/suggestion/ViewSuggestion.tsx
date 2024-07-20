@@ -1,7 +1,7 @@
 import { GlobalContext } from "@/context";
 import { createReview, getReviews } from "@/services/apiReview";
 import { getSuggestion } from "@/services/apiSuggestion";
-import { IUser } from "@/services/apiUser";
+import { getUserByID, IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useState } from "react"
@@ -21,31 +21,39 @@ function ViewSuggestion() {
 
   const [visible, setVisible] = useState(true);
   const [review, setReview] = useState("");
+  // const [suggester, setSuggester] = useState({});
   const navigate = useNavigate();
   
   const {id} = useParams();
   const {user} = useContext(GlobalContext);
 
+  // * Queries
   const {isLoading, data:suggestion, error} = useQuery({
     queryKey: ['suggestion'],
     queryFn: () => getSuggestion(Number(id)),
-  })
-
-  const {isLoading: reviewLoading, data: reviews, error: reviewError} = useQuery({
+  });
+  const {data: reviews} = useQuery({
     queryKey: ['review'],
     queryFn: () => getReviews(Number(id)),
-  })
+  });
+  
+    const {data: suggester, refetch, isRefetching} = useQuery({
+      queryKey: ['suggester'],
+      queryFn: () => getUserByID(suggestion.userID),
+    });
+
+    if (suggester?.id !== suggestion?.userID) {
+      refetch();
+    }
 
 
-
+// * Functions
   function toggleVisible() {
     setVisible((v) => v = !v);
   }
-
   function handleReview(e : any) {
     setReview(e.target.value);
   }
-
   async function handleSubmit(e : any) {
     e.preventDefault();
     if (!review) return;
@@ -60,15 +68,11 @@ function ViewSuggestion() {
       res => {
         setReview("");
         toggleVisible();
-        console.log(newReviewObj);
     
         location.reload();
       }
-
     )
-
   }
-
   function handleCancel(e : any) {
     e.preventDefault();
     setReview("");
@@ -77,37 +81,41 @@ function ViewSuggestion() {
 
 
 
-
-  if (isLoading) return (<h1>Loading...</h1>);
+  if (isLoading || suggestion.id != id || isRefetching) return (<h1>Loading...</h1>);
   if (error) return (<h2>An error occurred while loading this page.</h2>);
   if (!user) navigate('/signin');
 
   
   return (
-    <div className="flex flex-col items-center justify-center text-center">
+    <div className="flex flex-col items-center justify-center text-center h-[80dvh] overflow-y-scroll">
       {!suggestion ? (<h1>An error occurred while fetching data</h1>) :
         <>
-          <figure className="mb-16">
-            <div className="flex items-center justify-start w-full gap-3 mb-5">
-            {
-              suggestion.image.map((img : string) => (
-                <img src={img} alt={`${suggestion.name} image`} key={img} className="bg-center bg-cover" />
-              ))
-            }
+          <figure className="mb-16 mt-10">
+            <div className="flex items-center justify-start h-[40dvh] gap-3 mb-5">
+              <div className="w-[30dvw] bg-cover bg-center h-full rounded-xl" style={{backgroundImage: `url(${suggestion.image[0]})`}}></div>
+              {/* Multiple images to be handled */}
+              {/* <div className="flex-1 ">
+              {
+                suggestion.image.map((img : string, i : number) => (
+                i > 0 ? (<div key={img} className="bg-center bg-cover w-[20vw] h-[20vw]" style={{backgroundImage: `url(${img})`}}></div>) : null
+                ))
+              }
+              </div> */}
             </div>
-            <figcaption className="text-2xl font-bold">{suggestion.name}</figcaption>
+            <figcaption className="text-2xl font-bold">{suggestion?.name}</figcaption>
           </figure>
 
-          <div className="w-[50dvw]">
+          <div className="w-[50dvw] space-y-10">
             <Section title="Description">
               <article>
-                {suggestion.description}
+                {suggestion?.description}
+                <h6>Suggested by: <i>{suggester?.name}</i></h6>
               </article>
             </Section>
 
             <Section title="Recipe">
               <article>
-                {suggestion.recipe}
+                {suggestion?.recipe || <i className="text-gray-300">Not available</i>}
               </article>
             </Section>
 
@@ -115,7 +123,7 @@ function ViewSuggestion() {
               <div>
                 {reviews?.length === 0 ? (<h3>No Reviews Yet.</h3>) : (
                   <ul>
-                    {reviews?.map(review => (<li key={review.id}>{review.message} <i>By: {review.reviewerID}</i></li>))}
+                    {reviews?.map(review => (<li key={review.id}>{review.message}</li>))}
                   </ul>
                 )}
 

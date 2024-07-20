@@ -75,7 +75,7 @@ function CreateSuggestion() {
   if (!user) navigate('/signin');
 
   return (
-    <>
+    <div className="flex flex-col justify-center items-center">
       <form>
         <div>
           <label htmlFor="suggestion-image">
@@ -101,7 +101,7 @@ function CreateSuggestion() {
         <MyButton type="button" onclick={handleCancel}>Cancel</MyButton>
         <MyButton type="submit" onclick={handleSubmit}>Submit Suggestion</MyButton>
       </form>
-    </>
+    </div>
   )
 }
 

@@ -102,50 +102,62 @@ function Signin() {
 
 
   return (
-    <div>
-      <h1>Welcome!</h1>
+    <div className="flex justify-center flex-col items-center my-16 gap-24">
+      <h1 className="text-4xl">Welcome!</h1>
       {existingUser ? (
-        <form action="#">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <FormInput type="email" name="user-email" id="email" value={userEmail} onChange={handleEmailInput} />
+        <form action="#" className="w-[40vw]">
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <FormInput type="email" name="user-email" id="email" value={userEmail} onChange={handleEmailInput} />
+            </div>
+
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <FormInput type={reveal ? ("text") : ("password")} name="user-password" id="password" value={password} onChange={handlePasswordInput} />
+                <button className="absolute top-[25%] right-3 text-sm" type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
+              </div>
+              {error ? (<span>This password is incorrect</span>) : null}
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <FormInput type={reveal ? ("text") : ("password")} name="user-password" id="password" value={password} onChange={handlePasswordInput} />
-            <button type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
-            {error ? (<span>This password is incorrect</span>) : null}
-          </div>
-
-          <MyButton type="submit" onclick={handleSignInSubmit}>Sign in</MyButton>
+          <MyButton type="submit" className="w-full mt-10" onclick={handleSignInSubmit}>Sign in</MyButton>
         </form>
       ) : (
         
-        <form action="#">
-          <div>
-            <Label htmlFor="name">Full Name</Label>
-            <FormInput type="text" name="user-name" id="name" value={name} onChange={handleNameInput} />
+        <form action="#" className="w-[40vw]">
+          <div className="space-y-3">
+
+            <div>
+              <Label htmlFor="name">Full Name</Label>
+              <FormInput type="text" name="user-name" id="name" value={name} onChange={handleNameInput} />
+            </div>
+
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <FormInput type="email" name="user-email" id="email" value={userEmail} onChange={handleEmailInput}/>
+            </div>
+
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <FormInput type={reveal ? ("text") : ("password")} name="user-password" id="password" value={password} onChange={handlePasswordInput} />
+                <button className="absolute top-[25%] right-3 text-sm" type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <div className="relative">
+                <FormInput type={reveal ? ("text") : ("password")} name="user-confirm-password" id="confirm-password" onChange={confirmPassword}/>
+                <button className="absolute top-[25%] right-3 text-sm" type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
+              </div> 
+            </div>
+
           </div>
 
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <FormInput type="email" name="user-email" id="email" value={userEmail} onChange={handleEmailInput}/>
-          </div>
-
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <FormInput type={reveal ? ("text") : ("password")} name="user-password" id="password" value={password} onChange={handlePasswordInput} />
-            <button type="button" onClick={toggleReveal}>{reveal ? ("Hide") : ("Reveal")}</button>
-          </div>
-
-          <div>
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <FormInput type={reveal ? ("text") : ("password")} name="user-confirm-password" id="confirm-password" onChange={confirmPassword}/>
-            
-          </div>
-
-          <MyButton type="submit" onclick={handleSignUpSubmit}>Create Account</MyButton>
+          <MyButton type="submit" className="w-full mt-10" onclick={handleSignUpSubmit}>Create Account</MyButton>
         </form>
       )}
 

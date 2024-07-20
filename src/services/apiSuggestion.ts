@@ -4,6 +4,7 @@ export interface ISuggestion {
     image?: any, //TODO: To be modified to the actual data format
     name?: string,
     description?: string,
+    category?: string,
     recipe?: string,
     userID?: Number,
     id?: string | Number,

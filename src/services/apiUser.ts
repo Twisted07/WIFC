@@ -40,6 +40,20 @@ export async function getUser(email: IUser['email']) {
     return User;
 }
 
+export async function getUserByID(id: IUser['id']) {
+    const {data: User, error} = await supabase
+    .from('User')
+    .select()
+    .eq('id', id)
+    .single()
+
+    if (error) {
+        console.error('An error occurred while fetching single user by id');
+        throw new Error (error.message);
+    }
+    return User;
+}
+
 
 export async function createUser (newUserObj : IUser) {
 
