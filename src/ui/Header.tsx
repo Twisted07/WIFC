@@ -7,14 +7,14 @@ function Header() {
    * ? The search bar should be a datalist that filters from the suggestion names in the suggestionList, and displays not found if the value doesn't exist. That way, the suggestionList section only re-renders when the form is submitted. 
    */
 
-  const [searchValue, setSearchValue] = useState<string>("");
+  //! const [searchValue, setSearchValue] = useState<string>("");
   const {user, filterSearch, suggestions} = useContext(GlobalContext);
-  const uniqueSuggestions = [...new Set(suggestions?.map(suggestion => (suggestion.name)))].sort();
+  //! const uniqueSuggestions = [...new Set(suggestions?.map(suggestion => (suggestion.name)))].sort();
  
-  function handleSearch(e : any) {
-    setSearchValue(e.target.value.toLowerCase());
-    filterSearch(searchValue, 'search');
-  }
+  //! function handleSearch(e : any) {
+  //!   setSearchValue(e.target.value.toLowerCase());
+  //!   filterSearch(searchValue, 'search');
+  //! }
 
  
 

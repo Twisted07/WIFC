@@ -1,3 +1,4 @@
+import { IReview } from "./apiReview";
 import supabase, { supabaseUrl } from "./supabase";
 
 export interface ISuggestion {
@@ -5,6 +6,7 @@ export interface ISuggestion {
     name?: string,
     description?: string,
     category?: string,
+    reviews?: IReview[],    
     recipe?: string,
     userID?: Number,
     id?: string | Number,
@@ -98,17 +100,17 @@ export async function deleteSuggestion(id : ISuggestion['id']) {
     }
 }
 
-export async function updateSuggestion() {
+export async function updateSuggestionReviews(obj: IReview[], id: ISuggestion['id']) {
 
     const { data, error } = await supabase
     .from('Suggestion')
-    .update({ other_column: 'otherValue' })
-    .eq('some_column', 'someValue')
+    .update({"reviews": obj})
+    .eq('id', id)
     .select()
 
 
     if (error) {
-        console.error("There was a problem updating suggestion.");
+        console.error("There was a problem updating reviews.");
         throw new Error(error.message);
     }
     

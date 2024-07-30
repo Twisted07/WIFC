@@ -1,9 +1,9 @@
 import { GlobalContext } from "@/context";
-import { createReview, getReviews } from "@/services/apiReview";
-import { getSuggestion } from "@/services/apiSuggestion";
+import { getReviews, IReview } from "@/services/apiReview";
+import { getSuggestion, ISuggestion, updateSuggestionReviews } from "@/services/apiSuggestion";
 import { getUserByID, IUser } from "@/services/apiUser";
 import MyButton from "@/ui/MyButton";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useContext, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -32,19 +32,19 @@ function ViewSuggestion() {
     queryKey: ['suggestion'],
     queryFn: () => getSuggestion(Number(id)),
   });
-  const {data: reviews} = useQuery({
-    queryKey: ['review'],
-    queryFn: () => getReviews(Number(id)),
+  
+  const {status, mutate} = useMutation({
+    mutationFn: (updatedReviews : IReview[]) => updateSuggestionReviews(updatedReviews, Number(id))
   });
   
-    const {data: suggester, refetch, isRefetching} = useQuery({
-      queryKey: ['suggester'],
-      queryFn: () => getUserByID(suggestion.userID),
-    });
+  const {data: suggester, refetch, isRefetching} = useQuery({
+    queryKey: ['suggester'],
+    queryFn: () => getUserByID(suggestion.userID),
+  });
 
-    if (suggester?.id !== suggestion?.userID) {
-      refetch();
-    }
+  if (suggester?.id !== suggestion?.userID) {
+    refetch();
+  }
 
 
 // * Functions
@@ -54,6 +54,14 @@ function ViewSuggestion() {
   function handleReview(e : any) {
     setReview(e.target.value);
   }
+  function createReview(obj: IReview) {
+    const newSuggestion = {...suggestion};
+    newSuggestion.reviews.push(obj);
+    mutate(newSuggestion.reviews);
+    
+    // console.log(status);
+  }
+
   async function handleSubmit(e : any) {
     e.preventDefault();
     if (!review) return;
@@ -61,17 +69,11 @@ function ViewSuggestion() {
     const newReviewObj = {
       reviewerID : user?.id,
       message : review,
-      suggestionID : Number(id),
     };
     
-    await createReview(newReviewObj).then(
-      res => {
-        setReview("");
-        toggleVisible();
-    
-        location.reload();
-      }
-    )
+    createReview(newReviewObj)
+    setReview("");
+    toggleVisible();
   }
   function handleCancel(e : any) {
     e.preventDefault();
@@ -90,7 +92,7 @@ function ViewSuggestion() {
     <div className="flex flex-col items-center justify-center text-center h-[80dvh] overflow-y-scroll">
       {!suggestion ? (<h1>An error occurred while fetching data</h1>) :
         <>
-          <figure className="mb-16 mt-10">
+          <figure className="mt-10 mb-16">
             <div className="flex items-center justify-start h-[40dvh] gap-3 mb-5">
               <div className="w-[30dvw] bg-cover bg-center h-full rounded-xl" style={{backgroundImage: `url(${suggestion.image[0]})`}}></div>
               {/* Multiple images to be handled */}
@@ -121,9 +123,9 @@ function ViewSuggestion() {
 
             <Section title="Reviews">
               <div>
-                {reviews?.length === 0 ? (<h3>No Reviews Yet.</h3>) : (
+                {suggestion.reviews?.length === 0 ? (<h3>No Reviews Yet.</h3>) : (
                   <ul>
-                    {reviews?.map(review => (<li key={review.id}>{review.message}</li>))}
+                    {suggestion.reviews?.map((review : any) => (<li key={Math.floor(Math.random() * 1000000)}>{review.message}</li>))}
                   </ul>
                 )}
 

@@ -3,7 +3,7 @@ import supabase from "./supabase";
 export interface IReview {
   reviewerID? : Number,
   message : string,
-  suggestionID : Number,
+  // suggestionID : Number,
 
 }
 
