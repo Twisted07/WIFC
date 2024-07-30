@@ -83,6 +83,7 @@ function Signin() {
     const {isLoading: userLoading, data: currentUser, error: userError} = useQuery({
       queryKey: ['user'],
       queryFn: () => getUser(userEmail),
+      gcTime: 3600000,
     });
 
     if (userLoading) return <h1>Signing In...</h1>
@@ -102,7 +103,7 @@ function Signin() {
 
 
   return (
-    <div className="flex justify-center flex-col items-center my-16 gap-24">
+    <div className="flex flex-col items-center justify-center gap-24 my-16">
       <h1 className="text-4xl">Welcome!</h1>
       {existingUser ? (
         <form action="#" className="w-[40vw]">
