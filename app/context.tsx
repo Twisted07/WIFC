@@ -1,6 +1,8 @@
+"use client"
+
 import React, { createContext, useState } from "react";
-import { IUser } from "./services/apiUser";
-import { ISuggestion, getSuggestions } from "./services/apiSuggestion";
+import { IUser } from "./_old-features/services/apiUser";
+import { ISuggestion, getSuggestions } from "./_old-features/services/apiSuggestion";
 import { useQuery } from "@tanstack/react-query";
 
 type TGlobal = {
@@ -18,7 +20,7 @@ type TGlobal = {
   suggestions?: any[];
 };
 
-export const GlobalContext = createContext<TGlobal>({});
+export const GlobalContext = createContext<TGlobal | undefined>(undefined);
 
 function GlobalContextProvider({ children }: any) {
   // user, suggestionList,

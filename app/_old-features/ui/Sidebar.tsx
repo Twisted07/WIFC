@@ -1,5 +1,4 @@
-import { GlobalContext } from "@/context";
-import { useContext } from "react";
+"use client"
 
 function Sidebar() {
   /**
@@ -20,14 +19,14 @@ function Sidebar() {
 }
 
 function SidebarItem({title, value} : {title: string, value: string}) {
-  const {filterSearch, loadSuggestions} = useContext(GlobalContext);
+  // const {filterSearch, loadSuggestions} = useContext(GlobalContext);
   function handleFilter() {
     setTimeout( () => {
       if (value === 'all') {
-        loadSuggestions();
+        // loadSuggestions();
         return;
       }
-      filterSearch(value, 'category-filter');
+      // filterSearch(value, 'category-filter');
     }, 500)
   }
 
