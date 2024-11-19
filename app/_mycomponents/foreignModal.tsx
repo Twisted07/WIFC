@@ -1,11 +1,11 @@
 import { Modal } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 type TCustomModal = {
   open: boolean
   children: React.ReactNode
   onCancel: any
-  onSubmit: any
+  onSubmit?: any
   // onClose: any
   className?: string
   width?: string
@@ -13,17 +13,28 @@ type TCustomModal = {
   cancelText?: string
 }
 const CustomModal = ({children, onCancel, onSubmit, className, open, width, okText, cancelText} : TCustomModal) => {
+  const [initWidth, setInitWidth] = useState("50%");
+
+  useEffect(()=> {
+    if (window?.visualViewport?.width as any < 350) {
+      setInitWidth("90%")
+    } else if (window?.visualViewport?.width as any < 600) {
+      setInitWidth("80%")
+    }
+  }, [])
+
   return (
     <Modal
       open={open}
       className={`w-[70%] ${className}`}
       onCancel={onCancel}
-      onOk={onSubmit}
+      onOk={onSubmit || onCancel}
       okText={okText}
       cancelText={cancelText}
-      width={width}
+      width={width || initWidth}
       footer={[]}
-    >{children}</Modal>
+    ><div className='pt-7 pb-3 md:pb-5 md:px-5'>{children}</div>
+    </Modal>
   )
 
 }

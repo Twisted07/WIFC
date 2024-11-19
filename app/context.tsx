@@ -3,24 +3,38 @@
 import React, { createContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-interface TGlobal {
-  width: string
-  setWidth: React.Dispatch<React.SetStateAction<string>>
+interface IGlobal {
+  width: string,
+  modal: boolean,
+  setWidth: React.Dispatch<React.SetStateAction<string>>,
+  handleCloseModal: () => void,
+  openModal: () => void,
 };
 
-export const MainContext = createContext<TGlobal | undefined>(undefined);
+export const MainContext = createContext<IGlobal | undefined>(undefined);
 
-function GlobalContextProvider({ children }: any) {
+function MainContextProvider({ children }: any) {
   
   const [width, setWidth] = useState("60%");
+  const [modal, setModal] = useState(false);
 
+  function handleCloseModal() {
+    setModal(false);
+  }
+
+  function openModal() {
+    setModal(true);
+  }
 
 
   return (
     <MainContext.Provider
       value={{
+        modal,
         width,
         setWidth,
+        handleCloseModal,
+        openModal
       }}
     >
       {children}
@@ -28,4 +42,4 @@ function GlobalContextProvider({ children }: any) {
   );
 }
 
-export default GlobalContextProvider;
+export default MainContextProvider;

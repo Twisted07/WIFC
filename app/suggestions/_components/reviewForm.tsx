@@ -76,7 +76,7 @@ const ReviewForm = ({onDone} : any) => {
 
 
   return (
-    <form className='pt-10 pb-3 md:pb-5 md:px-5'>
+    <form>
       <div className='flex items-center font-semibold gap-5 mb-5 text-md lg:text-xl'>
         <label htmlFor='anonymous w-full'>Add review anonymously</label>
         <ConfigProvider

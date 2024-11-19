@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import {AntdRegistry} from "@ant-design/nextjs-registry"
-import GlobalContextProvider from "./context";
+import MainContextProvider from "./context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { QueryProvider } from "./query";
 import Header from "./_mycomponents/header";
@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QueryProvider>
-          <GlobalContextProvider>
+          <MainContextProvider>
             <AntdRegistry>
               <Header />
               <div className="lg:px-16 md:px-10 px-7 lg:py-10 md:py-8 py-6 bg-yellow-50">
@@ -45,7 +45,7 @@ export default function RootLayout({
                   
               </div>
             </AntdRegistry>
-          </GlobalContextProvider>
+          </MainContextProvider>
         </QueryProvider>
       </body>
     </html>

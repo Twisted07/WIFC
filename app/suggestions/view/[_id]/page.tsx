@@ -63,8 +63,7 @@ const suggestion: TSuggestion = {
 
 const SuggestionDetails = () => {
   const [modal, setModal] = useState(false);
-  const [width, setWidth] = useState('60%');
-  // const {width, setWidth} = useContext(MainContext);
+
 
   function handleModalToggle() {
     setModal(true);
@@ -74,13 +73,6 @@ const SuggestionDetails = () => {
     setModal(false);
   }
 
-  useEffect(()=> {
-    if (window?.visualViewport?.width as any < 350) {
-      setWidth("90%")
-    } else if (window?.visualViewport?.width as any < 600) {
-      setWidth("80%")
-    }
-  }, [window?.visualViewport?.width])
 
 
   return (
@@ -90,7 +82,7 @@ const SuggestionDetails = () => {
         <span>Suggested by: <strong>{suggestion.userName}</strong></span>
         <span>Ready in: <strong>{suggestion.duration}</strong></span>
       </div>
-      {/* <section className='flex flex-col items-center'>
+      <section className='flex flex-col items-center'>
         <div className='mb-5'>
           <ImageContainer />
           <div className='flex gap-3 mt-5'>
@@ -102,7 +94,7 @@ const SuggestionDetails = () => {
             <MiniImages text="View All" />
           </div>
         </div>
-      </section> */}
+      </section>
       <section className='border-dashed mt-5'>
         <DescriptionBox heading='Description' content={suggestion.description} />
 
@@ -119,31 +111,12 @@ const SuggestionDetails = () => {
         }
       </section>
 
-      {/* <Modal
-        open={modal}
-        onClose={() => setModal(false)}
-      >
-        <div>
-          Hello world
-        </div>
-      </Modal> */}
-      {/* <Modal
-        open={modal}
-        onClose={() => setModal(false)}
-        onCancel={() => setModal(false)}
-        onOk={handleAddReview}
-        destroyOnClose={true}
-      >
-        <div>
-          Hello world
-        </div>
-      </Modal> */}
+      
       <CustomModal
         open={modal}
         onCancel={handleCloseModal}
         onSubmit={handleCloseModal}
         okText='Add Review'
-        width={width}
       >
         <ReviewForm onDone={handleCloseModal} />
       </CustomModal>
