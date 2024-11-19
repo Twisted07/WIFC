@@ -1,8 +1,12 @@
 "use client"
 import { Button } from '@/_components/ui/button';
 import { FaPlus } from 'react-icons/fa'
-import React, { useRef, useState } from 'react'
-import Modal from '@/_mycomponents/modal';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+// import Modal from '@/_mycomponents/modal';
+import { Modal } from 'antd';
+import CustomModal from '@/_mycomponents/foreignModal';
+import ReviewForm from '@/suggestions/_components/reviewForm';
+import { MainContext } from '@/context';
 
 type TReview = {
   name: string,
@@ -22,7 +26,7 @@ type TSuggestion = {
 }
 
 
-const suggestion : TSuggestion = {
+const suggestion: TSuggestion = {
   userName: 'Twisted',
   duration: '30 minutes',
   meal: 'Bread and Beans',
@@ -59,21 +63,34 @@ const suggestion : TSuggestion = {
 
 const SuggestionDetails = () => {
   const [modal, setModal] = useState(false);
-  // const modalRef = useRef(null);
+  const [width, setWidth] = useState('60%');
+  // const {width, setWidth} = useContext(MainContext);
 
   function handleModalToggle() {
     setModal(true);
   }
 
+  function handleCloseModal() {
+    setModal(false);
+  }
+
+  useEffect(()=> {
+    if (window?.visualViewport?.width as any < 350) {
+      setWidth("90%")
+    } else if (window?.visualViewport?.width as any < 600) {
+      setWidth("80%")
+    }
+  }, [window?.visualViewport?.width])
+
 
   return (
-    <div className='text-black'>
+    <div className='text-black w-full'>
       <h1 className='text-4xl font-semibold mb-2 text-center'>{suggestion.meal}</h1>
       <div className='italic flex justify-center gap-10 mb-3'>
         <span>Suggested by: <strong>{suggestion.userName}</strong></span>
         <span>Ready in: <strong>{suggestion.duration}</strong></span>
       </div>
-      <section className='flex flex-col items-center'>
+      {/* <section className='flex flex-col items-center'>
         <div className='mb-5'>
           <ImageContainer />
           <div className='flex gap-3 mt-5'>
@@ -83,14 +100,14 @@ const SuggestionDetails = () => {
             <MiniImages />
             <MiniImages />
             <MiniImages text="View All" />
-          </div> 
+          </div>
         </div>
-      </section>
+      </section> */}
       <section className='border-dashed mt-5'>
         <DescriptionBox heading='Description' content={suggestion.description} />
 
         <DescriptionBox heading='How to make/Recipe' type='textarea' content={suggestion.recipe} />
-        
+
         <div>
           <div className='flex justify-between items-center pb-3 border-b-2 border-b-gray-200 mb-3'>
             <h1 className='text-lg font-bold'>Reviews</h1>
@@ -102,14 +119,34 @@ const SuggestionDetails = () => {
         }
       </section>
 
-      <Modal
+      {/* <Modal
         open={modal}
         onClose={() => setModal(false)}
       >
         <div>
           Hello world
         </div>
-      </Modal>
+      </Modal> */}
+      {/* <Modal
+        open={modal}
+        onClose={() => setModal(false)}
+        onCancel={() => setModal(false)}
+        onOk={handleAddReview}
+        destroyOnClose={true}
+      >
+        <div>
+          Hello world
+        </div>
+      </Modal> */}
+      <CustomModal
+        open={modal}
+        onCancel={handleCloseModal}
+        onSubmit={handleCloseModal}
+        okText='Add Review'
+        width={width}
+      >
+        <ReviewForm onDone={handleCloseModal} />
+      </CustomModal>
     </div>
   )
 }
@@ -120,28 +157,28 @@ const ImageContainer = () => {
   );
 }
 
-const MiniImages = ({text = ""}) => {
+const MiniImages = ({ text = "" }) => {
   return (
     <div className='w-[7rem] h-[5rem] bg-yellow-300'>{text}</div>
   );
 }
 
-const DescriptionBox = ({heading, content = "", type} : {heading: string, content: string, type?: string}) => {
+const DescriptionBox = ({ heading, content = "", type }: { heading: string, content: string, type?: string }) => {
   return (
     <article className='mt-5'>
-    <h1 className='text-lg font-semibold pb-3 border-b-2 border-b-gray-200 mb-3'>{heading}</h1>
+      <h1 className='text-lg font-semibold pb-3 border-b-2 border-b-gray-200 mb-3'>{heading}</h1>
       {
         type === 'textarea' ? (
-        <textarea className='italic tracking-wide bg-transparent resize-none' rows={15} cols={100} value={content} disabled></textarea>
+          <textarea className='italic tracking-wide bg-transparent w-full resize-none' rows={15} value={content} disabled></textarea>
         ) : (
-        <p className='italic tracking-wide'>{content}</p>
+          <p className='italic tracking-wide'>{content}</p>
         )
       }
     </article>
   );
 }
 
-const Reviews = ({review}: {review: TReview}) => {
+const Reviews = ({ review }: { review: TReview }) => {
   return (
     <div className='border-2 py-3 px-5 rounded-xl bg-white bg-opacity-5 text-black mb-3'>
       <div className='flex justify-between items-start mb-2'>

@@ -4,85 +4,27 @@ import React, { createContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 interface TGlobal {
-  // isFilter?: Boolean;
-  // user?: IUser;
-  // setUser?: React.Dispatch<React.SetStateAction<object>>,
-  // setUser?: any;
-  // setIsFilter: React.Dispatch<React.SetStateAction<Boolean>>;
-  // setSuggestionList: React.Dispatch<React.SetStateAction<object[]>>;
-  // updateRemoteUser: (user: IUser) => void;
-  // filterSearch: (searchValue: string, type: string) => void;
-  // // // loadSuggestions: () => void;
-  // // loadingSuggestions: any;
-  // suggestions?: any[];
+  width: string
+  setWidth: React.Dispatch<React.SetStateAction<string>>
 };
 
-export const GlobalContext = createContext<TGlobal | undefined>(undefined);
+export const MainContext = createContext<TGlobal | undefined>(undefined);
 
 function GlobalContextProvider({ children }: any) {
-  // user, suggestionList,
-  const [user, setUser] = useState({});
-  const [suggestionList, setSuggestionList] = useState([{}]);
-  const [isFilter, setIsFilter] = useState<Boolean>(false);
-
-  // const {
-  //   isLoading: loadingSuggestions,
-  //   data: suggestions,
-  //   error: suggestionError,
-  // } = useQuery({
-  //   queryKey: ["suggestions"],
-  //   queryFn: getSuggestions,
-  // });
-
-  // function updateRemoteUser(user: IUser) {
-  //   setUser(user);
-  // }
-
-  // function loadSuggestions() {
-  //   if (suggestions) {
-  //     setSuggestionList(suggestions);
-  //     setIsFilter(false);
-  //   } else console.error("suggestions could not load in load suggestions");
-  // }
-
-  // function filterSearch(searchValue: string, type: string) {
-	// 	let filteredList;
-		
-  //   switch (type) {
-  //     case "search":
-	// 			filteredList = suggestions?.filter((suggestion) =>
-	// 				suggestion.name.toLowerCase().includes(searchValue));
-	// 			break;
-
-  //     case "category-filter":
-  //       filteredList = suggestions?.filter(
-  //         (suggestion) => suggestion.category.includes(searchValue.toLowerCase()));
-  //       break;
-  //   }
-  //   setSuggestionList(filteredList as any[]);
-  //   setIsFilter(true);
-  // }
+  
+  const [width, setWidth] = useState("60%");
 
 
 
   return (
-    <GlobalContext.Provider
+    <MainContext.Provider
       value={{
-        // filterSearch,
-        isFilter,
-        setIsFilter,
-        // loadSuggestions,
-        // loadingSuggestions,
-        // updateRemoteUser,
-        // user,
-        setUser,
-        setSuggestionList,
-        // suggestions,
-        // suggestionList,
+        width,
+        setWidth,
       }}
     >
       {children}
-    </GlobalContext.Provider>
+    </MainContext.Provider>
   );
 }
 
