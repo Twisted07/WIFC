@@ -1,6 +1,7 @@
 "use client"
 
-import { MainContext } from '@/context';
+import MyInput from '@/_mycomponents/input';
+import { MainContext, useMainContext } from '@/context';
 import React, { useContext, useRef, useState } from 'react'
 
 
@@ -15,21 +16,11 @@ const Signin = () => {
   const [email, setEmail] = useState("");
   const [passwd, setPasswd] = useState("");
 
-  const {handleCloseModal} = useContext(MainContext);
+  const {handleCloseModal} = useMainContext();
 
-  const emailRef = useRef<any>(null);
-  const passRef = useRef<any>(null);
-
-
-
-  const errorBorder = 'border-red-500 focus:border-red-500 outline-red-500';
-  const greenBorder = 'border-yellow-700 focus:border-green-500 outline-green-500';
 
   function handleSubmit(e: any) {
     e.preventDefault();
-
-    // if (!email) { setError("email"); emailRef.current.focus(); return; }
-    // else if (!passwd) { setError("passwd"); passRef.current.focus(); return; }
 
     const user = {
       email: email,
@@ -54,11 +45,12 @@ const Signin = () => {
         <div className='space-y-3 mb-5'>
           <div>
             <label htmlFor="signin_email" className='block text-lg'>Email</label>
-            <input ref={emailRef} className={`${!emailRef?.current?.validity?.valid ? (errorBorder) : (greenBorder)} w-full border-yellow-700 border rounded-md py-1 px-2`} type="email" id="signin_email" name="signin_email" value={email} onChange={(e)=> setEmail(e.target.value)} required />
+            <MyInput type="email" id="signin_email" name="signin_email" value={email} onChange={(e)=> setEmail(e.target.value)} required={true} />
+
           </div>
           <div>
             <label htmlFor="signin_passwd" className='block text-lg'>Password</label>
-            <input ref={passRef} className={`${!passRef?.current?.validity?.valid ? (errorBorder) : (greenBorder)} w-full border-yellow-700 border rounded-md py-1 px-2`} type="password" name='signin_passwd' id='signin_passwd' value={passwd} onChange={(e)=> setPasswd(e.target.value)} minLength={7} required />
+            <MyInput type="password" name='signin_passwd' id='signin_passwd' value={passwd} onChange={(e)=> setPasswd(e.target.value)} minLength={7} required />
             {passwd.length < 7 && <p className='text-red-500'>Password must be at least 7 characters long</p>}
           </div>
         </div>

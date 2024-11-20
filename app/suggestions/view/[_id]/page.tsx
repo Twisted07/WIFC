@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal } from 'antd';
 import CustomModal from '@/_mycomponents/foreignModal';
 import ReviewForm from '@/suggestions/_components/reviewForm';
-import { MainContext } from '@/context';
+import { MainContext, useMainContext } from '@/context';
 
 type TReview = {
   name: string,
@@ -62,18 +62,7 @@ const suggestion: TSuggestion = {
 };
 
 const SuggestionDetails = () => {
-  const [modal, setModal] = useState(false);
-
-
-  function handleModalToggle() {
-    setModal(true);
-  }
-
-  function handleCloseModal() {
-    setModal(false);
-  }
-
-
+  const { openModal, handleCloseModal, modal: {open, type}} = useMainContext();
 
   return (
     <div className='text-black w-full'>
@@ -103,7 +92,7 @@ const SuggestionDetails = () => {
         <div>
           <div className='flex justify-between items-center pb-3 border-b-2 border-b-gray-200 mb-3'>
             <h1 className='text-lg font-bold'>Reviews</h1>
-            <Button className='bg-yellow-700 font-semibold text-stone-200 rounded-xl border-2 border-yellow-700 hover:text-yellow-700 hover:border-yellow-700' onClick={handleModalToggle}>Add review <FaPlus className='ml-3' /></Button>
+            <Button className='bg-yellow-700 font-semibold text-stone-200 rounded-xl border-2 border-yellow-700 hover:text-yellow-700 hover:border-yellow-700' onClick={() => openModal("add_review")}>Add review <FaPlus className='ml-3' /></Button>
           </div>
         </div>
         {
@@ -111,15 +100,17 @@ const SuggestionDetails = () => {
         }
       </section>
 
-      
-      <CustomModal
-        open={modal}
-        onCancel={handleCloseModal}
-        onSubmit={handleCloseModal}
-        okText='Add Review'
-      >
-        <ReviewForm onDone={handleCloseModal} />
-      </CustomModal>
+      {
+        type === 'add_review' && (
+        <CustomModal
+          open={open}
+          onCancel={handleCloseModal}
+          okText='Add Review'
+        >
+          <ReviewForm />
+        </CustomModal>
+        )
+      }
     </div>
   )
 }

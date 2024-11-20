@@ -5,13 +5,15 @@ import { MainContext } from '@/context';
 import { Button, ConfigProvider, Switch } from 'antd'
 import React, { useContext, useRef, useState } from 'react'
 
-const ReviewForm = ({onDone} : any) => {
+const ReviewForm = () => {
   const [anon, setAnon] = useState(false);
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [review, setReview] = useState("");
   const [error, setError] = useState("");
   const [rating, setRating] = useState(3);
+
+  const {handleCloseModal} = useContext(MainContext);
 
 
   function __reset() {
@@ -46,7 +48,7 @@ const ReviewForm = ({onDone} : any) => {
   function handleCancel() {
     // Clear the input and close the modal
     __reset();
-    onDone();
+    handleCloseModal();
   }
 
   function handleSubmit(e: any) {
@@ -67,7 +69,7 @@ const ReviewForm = ({onDone} : any) => {
 
     console.log(formData, "formData");
     __reset();
-    onDone();
+    handleCloseModal();
 
     // TODO: Send the review to the server
   }

@@ -11,8 +11,9 @@ type TCustomModal = {
   width?: string
   okText?: string
   cancelText?: string
+  title?: string
 }
-const CustomModal = ({children, onCancel, onSubmit, className, open, width, okText, cancelText} : TCustomModal) => {
+const CustomModal = ({ children, onCancel, onSubmit, className, open, width, okText, cancelText, title } : TCustomModal) => {
   const [initWidth, setInitWidth] = useState("50%");
 
   useEffect(()=> {
@@ -33,6 +34,8 @@ const CustomModal = ({children, onCancel, onSubmit, className, open, width, okTe
       cancelText={cancelText}
       width={width || initWidth}
       footer={[]}
+      title={title}
+      centered={true}
     ><div className='pt-7 pb-3 md:pb-5 md:px-5'>{children}</div>
     </Modal>
   )
