@@ -1,6 +1,7 @@
 "use client"
 
 import MyInput from '@/_mycomponents/input';
+import PasswordInput from '@/_mycomponents/password';
 import { MainContext, useMainContext } from '@/context';
 import React, { useContext, useRef, useState } from 'react'
 
@@ -50,8 +51,7 @@ const Signin = () => {
           </div>
           <div>
             <label htmlFor="signin_passwd" className='block text-lg'>Password</label>
-            <MyInput type="password" name='signin_passwd' id='signin_passwd' value={passwd} onChange={(e)=> setPasswd(e.target.value)} minLength={7} required />
-            {passwd.length < 7 && <p className='text-red-500'>Password must be at least 7 characters long</p>}
+            <PasswordInput name='signin_passwd' id='signin_passwd' value={passwd} setValue={setPasswd} />
           </div>
         </div>
 

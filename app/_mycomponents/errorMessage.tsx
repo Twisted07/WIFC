@@ -7,7 +7,7 @@ type TErrorMessage = {
 }
 const ErrorMessage = ({message, className} : TErrorMessage) => {
   return (
-    <p className={`text-red-500 text-sm flex items-center gap-1 ${className}`}><FaExclamationCircle />{message}</p>
+    <p className={`text-red-500 text-sm flex items-center gap-1 mt-1 ${className}`}><FaExclamationCircle />{message}</p>
   )
 }
 

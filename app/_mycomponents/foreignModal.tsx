@@ -4,16 +4,16 @@ import React, { useEffect, useState } from 'react'
 type TCustomModal = {
   open: boolean
   children: React.ReactNode
-  onCancel: any
-  onSubmit?: any
-  // onClose: any
+  onCancel: () => void
+  onSubmit?: () => void
+  onClose?: () => void
   className?: string
   width?: string
   okText?: string
   cancelText?: string
   title?: string
 }
-const CustomModal = ({ children, onCancel, onSubmit, className, open, width, okText, cancelText, title } : TCustomModal) => {
+const CustomModal = ({ children, onCancel, onSubmit, className, open, width, okText, cancelText, title, onClose } : TCustomModal) => {
   const [initWidth, setInitWidth] = useState("50%");
 
   useEffect(()=> {
@@ -29,6 +29,7 @@ const CustomModal = ({ children, onCancel, onSubmit, className, open, width, okT
       open={open}
       className={`w-[70%] ${className}`}
       onCancel={onCancel}
+      onClose={onClose}
       onOk={onSubmit || onCancel}
       okText={okText}
       cancelText={cancelText}

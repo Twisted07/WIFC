@@ -1,6 +1,7 @@
 
 import { Toast } from '@/_components/ui/toast';
 import ErrorMessage from '@/_mycomponents/errorMessage';
+import ModalFooter from '@/_mycomponents/modalFooter';
 import { MainContext } from '@/context';
 import { Button, ConfigProvider, Switch } from 'antd'
 import React, { useContext, useRef, useState } from 'react'
@@ -123,10 +124,7 @@ const ReviewForm = () => {
         {error === "review" && <ErrorMessage message='Please fill in a valid input' />}
       </div>
 
-      <div className='justify-end mt-5 flex'>
-        <Button variant='outlined' className='mr-5' style={{borderColor: "rgb(161, 98, 7)", color: "rgb(161, 98, 7)"}} onClick={handleCancel}>Cancel</Button>
-        <Button type='primary' style={{backgroundColor: "rgb(161, 98, 7)"}} onClick={handleSubmit}>Submit</Button>
-      </div>
+      <ModalFooter className='mt-5' onSubmit={handleSubmit} onCancel={handleCancel} /> 
     </form>
   )
 }
