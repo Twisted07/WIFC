@@ -9,9 +9,9 @@ import { Spin } from "antd"
 export default function Home() {
   useEffect(function(){redirect('/suggestions')}, [])
   return (
-    <div className="h-[100vh]">
+    // <div className="h-[100vh]">
       <Spin />
-    </div>
+    // </div>
   );
 
 }

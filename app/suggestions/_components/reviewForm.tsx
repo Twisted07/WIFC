@@ -1,4 +1,4 @@
-
+"use client"
 import { Toast } from '@/_components/ui/toast';
 import ErrorMessage from '@/_mycomponents/errorMessage';
 import ModalFooter from '@/_mycomponents/modalFooter';

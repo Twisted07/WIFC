@@ -1,8 +1,9 @@
+import { ISuggestion } from '@/_modules/suggestion';
 import MyButton from '@/_mycomponents/button';
 import MyInput, { errorBorder, greenBorder } from '@/_mycomponents/input';
 import MyLabel from '@/_mycomponents/label';
 import { MainContext, useMainContext } from '@/context';
-import { ConfigProvider, Radio } from 'antd';
+import { Checkbox, CheckboxProps, ConfigProvider, Radio } from 'antd';
 import React, { useContext, useState } from 'react'
 
 const CreateSuggestion = () => {
@@ -11,9 +12,22 @@ const CreateSuggestion = () => {
   const [recipe, setRecipe] = useState("");
   const [duration, setDuration] = useState("1");
   const [images, setImages] = useState([]);
-  const [mealPeriod, setMealPeriod] = useState("breakfast");
+  const [mealPeriod, setMealPeriod] = useState(["breakfast"]);
 
-  const {handleCloseModal} = useMainContext();
+  const periodOptions = ['breakfast', 'lunch', 'dinner'];
+
+  const checkAll = periodOptions.length === mealPeriod.length;
+  const indeterminate = mealPeriod.length > 0 && mealPeriod.length < periodOptions.length;
+
+  const onChange = (list: string[]) => {
+    setMealPeriod(list);
+  };
+
+  const onCheckAllChange: CheckboxProps['onChange'] = (e) => {
+    setMealPeriod(e.target.checked ? periodOptions : []);
+  };
+
+  const { handleCloseModal } = useMainContext();
 
   function __reset() {
     setMealName("");
@@ -21,20 +35,21 @@ const CreateSuggestion = () => {
     setRecipe("");
     setDuration("1");
     setImages([]);
-    setMealPeriod("breakfast");
+    setMealPeriod(["breakfast"]);
   }
 
   function handleCreateSuggestion(e: any) {
     e.preventDefault();
 
-    const suggestionData = {
+    const suggestionData: ISuggestion = {
       name: mealName,
       description,
       recipe,
       duration,
       images,
-      bestEnjoyed: mealPeriod,
-      reviews: []
+      category: mealPeriod,
+      reviews: [],
+      suggesterName: "Twisted"
     }
     console.log("submitting");
     console.log(suggestionData, "suggestion data");
@@ -72,19 +87,26 @@ const CreateSuggestion = () => {
             theme={
               {
                 components: {
-                  Radio: {
+                  Checkbox: {
                     colorPrimary: "#FFC107",
                   }
                 }
               }
             }
           >
-            <Radio.Group onChange={(e) => setMealPeriod(e.target.value)} value={mealPeriod} id='meal_period' name='meal_period'>
+            {/* <Radio.Group onChange={(e) => setMealPeriod(e.target.value)} value={mealPeriod} id='meal_period' name='meal_period'>
               <Radio value={"breakfast"}>Breakfast</Radio>
               <Radio value={"lunch"}>Lunch</Radio>
               <Radio value={"dinner"}>Dinner</Radio>
               <Radio value={"all"}>Any time</Radio>
-            </Radio.Group>
+              <Checkbox value={"all"}>Any time</Checkbox>
+            </Radio.Group> */}
+            <>
+              <Checkbox onChange={onCheckAllChange} checked={checkAll}>
+                Any time
+              </Checkbox>
+              <Checkbox.Group options={periodOptions} value={mealPeriod} onChange={onChange} />
+            </>
           </ConfigProvider>
         </div>
 

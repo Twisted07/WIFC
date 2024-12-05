@@ -1,74 +1,67 @@
 "use client"
 import { Button } from '@/_components/ui/button';
 import { FaPlus } from 'react-icons/fa'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useId, useRef, useState } from 'react'
 // import Modal from '@/_mycomponents/modal';
-import { Modal } from 'antd';
+import { Modal, Spin } from 'antd';
 import CustomModal from '@/_mycomponents/foreignModal';
 import ReviewForm from '@/suggestions/_components/reviewForm';
 import { MainContext, useMainContext } from '@/context';
-
-type TReview = {
-  name: string,
-  review: string,
-  rating: string,
-  email: string,
-}
-
-type TSuggestion = {
-  userName: string,
-  duration: string,
-  meal: string,
-  images?: [],
-  description: string,
-  recipe: string,
-  reviews: TReview[]
-}
+import { IReview, ISuggestion } from '@/_modules/suggestion';
+import { useSearchParams } from 'next/navigation';
+import { getOneSuggestion } from '@/_lib/data-service';
 
 
-const suggestion: TSuggestion = {
-  userName: 'Twisted',
-  duration: '30 minutes',
-  meal: 'Bread and Beans',
-  images: [],
-  description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque minus assumenda rerum pariatur non voluptates illum aliquid, fugiat qui et iste ducimus aspernatur consequuntur. Eveniet, est nostrum? Molestiae, fugit laboriosam. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo esse ducimus velit. Autem, quod tempore? Repellendus quo facere necessitatibus minima illo doloremque molestiae cupiditate explicabo molestias distinctio aliquid, dolore quam!',
-  recipe: `Here are the steps to make this recipe:
-        1. Preheat oven to 350°F (180°C).
-        2. Mix all the ingredients together in a bowl.
-        3. Pour the mixture into a baking dish.
-        4. Bake for 30 minutes.
-        5. Serve hot.`,
-  reviews: [
-    {
-      name: 'Twisted',
-      review: "Tastes so good and wasn't so difficult to prepare. Great meal!",
-      rating: '5',
-      email: 'twisted@gmail.com',
-    },
-    {
-      name: 'Bravo',
-      review: "Nice suggestion. I enjoyed it as a breakfast dish.",
-      rating: '4',
-      email: 'bravo@gmail.com'
-    },
-    {
-      name: 'Morikonkolo',
-      review: "Lovely meal! I enjoyed mine glazing it with honey... so heavenly!",
-      rating: '5',
-      email: 'morikonkolo@gmail.com'
-    }
-  ],
 
-};
 
-const SuggestionDetails = () => {
+// const suggestion: ISuggestion = {
+//   suggesterName: 'Twisted',
+//   duration: '30 minutes',
+//   name: 'Bread and Beans',
+//   category: ['Lunch'],
+//   images: [],
+//   description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque minus assumenda rerum pariatur non voluptates illum aliquid, fugiat qui et iste ducimus aspernatur consequuntur. Eveniet, est nostrum? Molestiae, fugit laboriosam. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo esse ducimus velit. Autem, quod tempore? Repellendus quo facere necessitatibus minima illo doloremque molestiae cupiditate explicabo molestias distinctio aliquid, dolore quam!',
+//   recipe: `Here are the steps to make this recipe:
+//         1. Preheat oven to 350°F (180°C).
+//         2. Mix all the ingredients together in a bowl.
+//         3. Pour the mixture into a baking dish.
+//         4. Bake for 30 minutes.
+//         5. Serve hot.`,
+//   reviews: [
+//     {
+//       name: 'Twisted',
+//       review: "Tastes so good and wasn't so difficult to prepare. Great meal!",
+//       rating: '5',
+//       email: 'twisted@gmail.com',
+//     },
+//     {
+//       name: 'Bravo',
+//       review: "Nice suggestion. I enjoyed it as a breakfast dish.",
+//       rating: '4',
+//       email: 'bravo@gmail.com'
+//     },
+//     {
+//       name: 'Morikonkolo',
+//       review: "Lovely meal! I enjoyed mine glazing it with honey... so heavenly!",
+//       rating: '5',
+//       email: 'morikonkolo@gmail.com'
+//     }
+//   ],
+
+// };
+
+const SuggestionDetails = ({suggestion} : {suggestion: ISuggestion}) => {
   const { openModal, handleCloseModal, modal: {open, type}} = useMainContext();
+  console.log(suggestion, "suggestion")
+  const id = useId();
+
+  if (!suggestion) return <Spin />
 
   return (
     <div className='text-black w-full'>
-      <h1 className='text-4xl font-semibold mb-2 text-center'>{suggestion.meal}</h1>
+      <h1 className='text-4xl font-semibold mb-2 text-center'>{suggestion.name}</h1>
       <div className='italic flex justify-center gap-10 mb-3'>
-        <span>Suggested by: <strong>{suggestion.userName}</strong></span>
+        <span>Suggested by: <strong>{suggestion.suggesterName}</strong></span>
         <span>Ready in: <strong>{suggestion.duration}</strong></span>
       </div>
       <section className='flex flex-col items-center'>
@@ -85,18 +78,18 @@ const SuggestionDetails = () => {
         </div>
       </section>
       <section className='border-dashed mt-5'>
-        <DescriptionBox heading='Description' content={suggestion.description} />
+        <DescriptionBox key={suggestion.description} heading='Description' content={suggestion.description} />
 
-        <DescriptionBox heading='How to make/Recipe' type='textarea' content={suggestion.recipe} />
+        <DescriptionBox key={suggestion.recipe} heading='How to make/Recipe' type='textarea' content={suggestion.recipe} />
 
-        <div>
+        <div key={`${id}container`}>
           <div className='flex justify-between items-center pb-3 border-b-2 border-b-gray-200 mb-3'>
             <h1 className='text-lg font-bold'>Reviews</h1>
             <Button className='bg-yellow-700 font-semibold text-stone-200 rounded-xl border-2 border-yellow-700 hover:text-yellow-700 hover:border-yellow-700' onClick={() => openModal("add_review")}>Add review <FaPlus className='ml-3' /></Button>
           </div>
         </div>
         {
-          suggestion.reviews.map(review => (<Reviews review={review} key={review.email} />))
+          suggestion.reviews?.map((review : IReview) => (<Reviews review={review} key={review.email} />))
         }
       </section>
 
@@ -142,7 +135,7 @@ const DescriptionBox = ({ heading, content = "", type }: { heading: string, cont
   );
 }
 
-const Reviews = ({ review }: { review: TReview }) => {
+const Reviews = ({ review }: { review: IReview }) => {
   return (
     <div className='border-2 py-3 px-5 rounded-xl bg-white bg-opacity-5 text-black mb-3'>
       <div className='flex justify-between items-start mb-2'>

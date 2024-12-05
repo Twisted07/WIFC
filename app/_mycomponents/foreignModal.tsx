@@ -1,3 +1,4 @@
+"use client"
 import { Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 
