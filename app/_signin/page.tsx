@@ -1,9 +1,10 @@
 "use client"
 
+import { getUsers } from '@/_lib/data-service';
 import MyInput from '@/_mycomponents/input';
 import PasswordInput from '@/_mycomponents/password';
-import { MainContext, useMainContext } from '@/context';
-import React, { useContext, useRef, useState } from 'react'
+import { useMainContext } from '@/context';
+import React, { useState } from 'react'
 
 
 /**
@@ -16,11 +17,13 @@ import React, { useContext, useRef, useState } from 'react'
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [passwd, setPasswd] = useState("");
+  const [signup, setSignup] = useState(false);
+  const [name, setName] = useState("");
 
   const {handleCloseModal} = useMainContext();
 
 
-  function handleSubmit(e: any) {
+  async function handleSubmit(e: any) {
     e.preventDefault();
 
     const user = {
@@ -29,6 +32,19 @@ const Signin = () => {
     };
 
     console.log(user);
+    const users = await getUsers();
+
+    if (!users) {
+      alert("An error occurred. Please try again in a few minutes.");
+      return;
+    }
+
+    const userFound = users?.find((user: IUser) => user.email === email && user.password === passwd);
+
+    if (!userFound && signup === false) {
+      setSignup(true);
+      return
+    }
     handleCloseModal();
 
     setEmail("");
@@ -40,23 +56,35 @@ const Signin = () => {
   return (
     <div className='text-stone-900'>
       <h1 className='text-3xl font-semibold'>Welcome Foodie!</h1>
-      <h6 className='text-xl'>Please Sign In to Continue</h6>
+      { !signup && <h6 className='text-xl'>Please Sign In to Continue</h6> }
 
       <form onSubmit={handleSubmit} className='mt-5'>
-        <div className='space-y-3 mb-5'>
-          <div>
-            <label htmlFor="signin_email" className='block text-lg'>Email</label>
-            <MyInput type="email" id="signin_email" name="signin_email" value={email} onChange={(e)=> setEmail(e.target.value)} required={true} />
+        {
+          !signup ?
+          (<>
+            <div className='space-y-3 mb-5'>
+              <div>
+                <label htmlFor="signin_email" className='block text-lg'>Email</label>
+                <MyInput type="email" id="signin_email" name="signin_email" value={email} onChange={(e)=> setEmail(e.target.value)} required={true} />
 
-          </div>
-          <div>
-            <label htmlFor="signin_passwd" className='block text-lg'>Password</label>
-            <PasswordInput name='signin_passwd' id='signin_passwd' value={passwd} setValue={setPasswd} />
-          </div>
-        </div>
+              </div>
+              <div>
+                <label htmlFor="signin_passwd" className='block text-lg'>Password</label>
+                <PasswordInput name='signin_passwd' id='signin_passwd' value={passwd} setValue={setPasswd} />
+              </div>
+            </div>
 
-        <button className='rounded-lg py-2 px-3 border bg-yellow-700 text-stone-100 w-full'>Signin</button>
+            <button className='rounded-lg py-2 px-3 border bg-yellow-700 text-stone-100 w-full'>Signin</button>
+          </>)
+          :
+          <>
+            <p>Looks like you are a first timer, if not, you can go back to signin with a registered email</p>
+            <h2>Please enter a display name</h2>
+            <MyInput type="text" id='signup_display-name' name='signup_display-name' value={name} onChange={(e) => setName(e.target.value)} required={true} />
+          </>
+        }
       </form>
+
     </div>
   )
 }

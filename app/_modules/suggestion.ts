@@ -1,4 +1,4 @@
-export interface ISuggestion {
+interface ISuggestion {
   name: string
   id?: string
   images: any[]
@@ -11,7 +11,7 @@ export interface ISuggestion {
   category: string[]
 }
 
-export interface IReview {
+interface IReview {
   name: string,
   review: string,
   rating: string,

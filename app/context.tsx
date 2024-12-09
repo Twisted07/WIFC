@@ -6,6 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 interface IGlobal {
   width: string,
   modal: {open: boolean, type: string},
+  signin: boolean,
+  handleSignin: () => void,
+  handleSignout: () => void,
   setWidth: React.Dispatch<React.SetStateAction<string>>,
   handleCloseModal: () => void,
   openModal: (type: string) => void,
@@ -21,7 +24,7 @@ export function useMainContext() {
 }
 
 function MainContextProvider({ children }: any) {
-  
+  const [signin, setSignin] = useState(false);
   const [width, setWidth] = useState("60%");
   const [modal, setModal] = useState({open: false, type: ""});
 
@@ -33,15 +36,25 @@ function MainContextProvider({ children }: any) {
     setModal({open: true, type: type});
   }
 
+  function handleSignin() {
+    setSignin(true);
+  }
+
+  function handleSignout() {
+    setSignin(false);
+  }
 
   return (
     <MainContext.Provider
       value={{
         modal,
         width,
+        signin,
         setWidth,
         handleCloseModal,
-        openModal
+        openModal,
+        handleSignin,
+        handleSignout
       }}
     >
       {children}

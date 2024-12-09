@@ -7,7 +7,6 @@ import { Modal, Spin } from 'antd';
 import CustomModal from '@/_mycomponents/foreignModal';
 import ReviewForm from '@/suggestions/_components/reviewForm';
 import { MainContext, useMainContext } from '@/context';
-import { IReview, ISuggestion } from '@/_modules/suggestion';
 import { useSearchParams } from 'next/navigation';
 import { getOneSuggestion } from '@/_lib/data-service';
 
@@ -77,10 +76,10 @@ const SuggestionDetails = ({suggestion} : {suggestion: ISuggestion}) => {
           </div>
         </div>
       </section>
-      <section className='border-dashed mt-5'>
-        <DescriptionBox key={suggestion.description} heading='Description' content={suggestion.description} />
+      <section key={suggestion.id} className='border-dashed mt-5'>
+        <DescriptionBox heading='Description' content={suggestion.description} />
 
-        <DescriptionBox key={suggestion.recipe} heading='How to make/Recipe' type='textarea' content={suggestion.recipe} />
+        <DescriptionBox heading='How to make/Recipe' type='textarea' content={suggestion.recipe} />
 
         <div key={`${id}container`}>
           <div className='flex justify-between items-center pb-3 border-b-2 border-b-gray-200 mb-3'>
@@ -89,7 +88,9 @@ const SuggestionDetails = ({suggestion} : {suggestion: ISuggestion}) => {
           </div>
         </div>
         {
-          suggestion.reviews?.map((review : IReview) => (<Reviews review={review} key={review.email} />))
+          suggestion.reviews.length > 0
+          ? suggestion.reviews?.map((review : IReview, i : number) => (<Reviews review={review} key={`${review.email}${i}`} />))
+          : <p className='italic text-gray-300'>No reviews yet. Be the first to give a review.</p>
         }
       </section>
 
