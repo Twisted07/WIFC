@@ -64,6 +64,49 @@ export async function deleteSuggestion(id: string) {
   return Suggestion;
 }
 
+// So this is meant to take in the id of the suggestion row and select the review column for update
+export async function createReview(id : string, data : IReview) {
+  const { data: Review, error } = await supabase
+  .from('Review')
+  .insert(data)
+  .select()
+
+  if (error) {
+    console.error(error);
+    throw new Error("An issue occured while creating review");
+  }
+
+  return Review;
+}
+
+export async function getReviews(id: string | number) {
+  const {data: reviews, error} = await supabase
+  .from('Review')
+  .select('*')
+  .eq('suggestionID', id)
+
+  if (error) {
+    console.error(error);
+    throw new Error("An error occurred while fetching reviews");
+  }
+
+  return reviews;
+}
+
+export async function deleteReview(id: string | number) {
+  const {data: review, error} = await supabase
+  .from('Review')
+  .delete()
+  .eq('id', id)
+  
+  if (error) {
+    console.error(error);
+    throw new Error("An issue occurred while deleting review");
+  }
+
+  return review;
+}
+
 
 // export async function getReviews() {
 
@@ -145,7 +188,7 @@ export async function createUser(user: IUser) {
   const { error } = await supabase
   .from('User')
   .insert(user)
-
+  
   if (error) {
     console.error(error);
     throw new Error("An issue occurred while creating user");

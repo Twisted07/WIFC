@@ -16,4 +16,5 @@ interface IReview {
   review: string,
   rating: string,
   email: string,
+  suggestionID: string | number,
 }
