@@ -23,17 +23,16 @@ const ReviewSection = ({params} : {params: {slug: string[]}}) => {
   const id = useId();
   
   const {data: suggestionList, error: errorSuggestionList, isLoading: isLoadingSuggestionList } = useGetSuggestionByID(slug[1]);
-  const {data: reviews, error: errorReviews, isLoading: isLoadingReviews} = useGetReviewsBySuggestionID(slug[1]);
+  const {data: reviewData, error: errorReviews, isLoading: isLoadingReviews} = useGetReviewsBySuggestionID(slug[1]);
   
   // ? The returned data from the query is a list with just one value - the suggestion object. So we need to use the first value of the list. If the list is empty, it means the suggestion was not found.
-
-  let suggestion;
-  if(suggestionList) suggestion = suggestionList[0];
-
   
-  if (isLoadingSuggestionList || isLoadingReviews) return <Spin spinning={true} size="large" />;
+  if (isLoadingReviews) return <Spin spinning={true} size="large" />;
+  if(!reviewData || !suggestionList) return <h1>An issue occurred while loading this page. Please try again or contact administrator.</h1>;
 
-  console.log(reviews, "reviews");
+  const suggestion = suggestionList[0];
+
+  console.log(reviewData[0], "reviews");
 
   return (
     <div className='text-black w-full'>
@@ -68,10 +67,10 @@ const ReviewSection = ({params} : {params: {slug: string[]}}) => {
           </div>
         </div>
         {
-          !reviews || reviews.length === 0 ? (
+          !reviewData || reviewData.length === 0 ? (
             <p className='italic text-gray-300'>No reviews yet. Be the first to give a review.</p>
           ) : (
-            suggestion.reviews?.map((review : IReview, i : number) => (<Reviews review={review} key={`${review.email}${i}`} />))
+            reviewData.map((review : IReview, i : number) => (<Reviews review={review} key={`${review.email}${i}`} />))
           )
         }
       </section>

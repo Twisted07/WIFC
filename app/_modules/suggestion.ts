@@ -14,7 +14,11 @@ interface ISuggestion {
 interface IReview {
   name: string,
   review: string,
-  rating: string,
+  rating: number,
   email: string,
   suggestionID: string | number,
+}
+
+interface IReviewData extends IReview {
+  Suggestion: ISuggestion
 }

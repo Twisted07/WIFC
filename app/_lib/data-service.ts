@@ -82,7 +82,7 @@ export async function createReview(id : string, data : IReview) {
 export async function getReviews(id: string | number) {
   const {data: reviews, error} = await supabase
   .from('Review')
-  .select('*')
+  .select(`*`)
   .eq('suggestionID', id)
 
   if (error) {
@@ -90,7 +90,7 @@ export async function getReviews(id: string | number) {
     throw new Error("An error occurred while fetching reviews");
   }
 
-  return reviews;
+  return reviews as IReview[];
 }
 
 export async function deleteReview(id: string | number) {

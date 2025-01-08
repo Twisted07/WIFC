@@ -20,7 +20,8 @@ const ReviewForm = ({id} : {id: string}) => {
   const {handleCloseModal} = useContext(MainContext);
 
   const mutation = useMutation({
-    mutationFn: (formData : IReview) => createReview(id, formData)
+    mutationFn: (formData : IReview) => createReview(id, formData),
+    onSuccess: () => {location.reload()}
   })
 
 
@@ -80,15 +81,17 @@ const ReviewForm = ({id} : {id: string}) => {
       else if (!displayName.trim()) { setError("displayName"); return; }
     }
 
+
     const formData : IReview = {
-      email: email.trim() ?? "",
-      name: displayName.trim() ?? "Anonymous",
+      email: email.trim() || "",
+      name: displayName.trim() || "Anonymous",
       review: review.trim(),
-      rating: "",
-      suggestionID: id,
+      rating,
+      suggestionID: +id,
     };
     
     console.log(formData, "formData");
+    console.log(Boolean(email.trim()));
     mutation.mutate(formData);
     
     __reset();
