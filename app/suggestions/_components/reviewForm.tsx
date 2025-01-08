@@ -1,12 +1,15 @@
 "use client"
 import { Toast } from '@/_components/ui/toast';
+import { createReview, updateSuggestion } from '@/_lib/data-service';
 import ErrorMessage from '@/_mycomponents/errorMessage';
 import ModalFooter from '@/_mycomponents/modalFooter';
 import { MainContext } from '@/context';
+import { useMutation } from '@tanstack/react-query';
 import { Button, ConfigProvider, Switch } from 'antd'
 import React, { useContext, useRef, useState } from 'react'
 
-const ReviewForm = () => {
+
+const ReviewForm = ({id} : {id: string}) => {
   const [anon, setAnon] = useState(false);
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -15,6 +18,10 @@ const ReviewForm = () => {
   const [rating, setRating] = useState(3);
 
   const {handleCloseModal} = useContext(MainContext);
+
+  const mutation = useMutation({
+    mutationFn: (formData : IReview) => createReview(id, formData)
+  })
 
 
   function __reset() {
@@ -53,6 +60,17 @@ const ReviewForm = () => {
   }
 
   function handleSubmit(e: any) {
+    /**
+     * The schema => {
+     * "email": "string",
+     * "displayName": "string",
+     * "review": "string",
+     * "rating": "number | string"
+     * }
+     * 
+     * ? The form is meant to contain the values used to render the review cards. Since we have the anonymous option, we need to have that handled as well. We should also see how to handle malicious inputs to the database 'cause I currently don't know how to implement strict schema check in the database, so as to forbid wrong payloads. In the meantime, we ensure the data is as clean as possible before sending it to the server.
+     */
+    
     e.preventDefault();
     
     if (!review.trim()) { setError("review"); return; }
@@ -62,13 +80,17 @@ const ReviewForm = () => {
       else if (!displayName.trim()) { setError("displayName"); return; }
     }
 
-    const formData = {
+    const formData : IReview = {
       email: email.trim() ?? "",
-      displayName: displayName.trim() ?? "Anonymous",
+      name: displayName.trim() ?? "Anonymous",
       review: review.trim(),
+      rating: "",
+      suggestionID: id,
     };
-
+    
     console.log(formData, "formData");
+    mutation.mutate(formData);
+    
     __reset();
     handleCloseModal();
 

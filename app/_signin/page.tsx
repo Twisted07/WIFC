@@ -4,6 +4,7 @@ import { getUsers } from '@/_lib/data-service';
 import MyInput from '@/_mycomponents/input';
 import PasswordInput from '@/_mycomponents/password';
 import { useMainContext } from '@/context';
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react'
 
 
@@ -22,29 +23,63 @@ const Signin = () => {
 
   const {handleCloseModal} = useMainContext();
 
+  const {data: users, error} = useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+  })
+  
+  console.log(users, "users");
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+
+    /**
+     * * check if user exists in database
+     * * if user exists, return user data to session storage
+     * * else open display name input form
+     * * then update user data with display name
+     * * finally, send the user data to database
+     * * update session storage with the new user data
+     * * reset form
+     */
 
     const user = {
       email: email,
       password: passwd
     };
 
-    console.log(user);
-    const users = await getUsers();
 
-    if (!users) {
+    if (error) {
       alert("An error occurred. Please try again in a few minutes.");
       return;
     }
 
+
     const userFound = users?.find((user: IUser) => user.email === email && user.password === passwd);
 
-    if (!userFound && signup === false) {
-      setSignup(true);
-      return
+    if (!userFound) {
+      if (!signup) {
+        setSignup(true);
+        return
+
+      } else {
+        const updatedUser = {
+          ...user,
+          displayName: name
+        }
+
+        // TODO: upload to database
+        createUser();
+        // setSesstion storage
+        sessionStorage.setItem('user', JSON.stringify(updatedUser));
+      }
     }
+
+    if (userFound) {
+      sessionStorage.setItem('user', JSON.stringify(userFound));
+    }
+
+
     handleCloseModal();
 
     setEmail("");

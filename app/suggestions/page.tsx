@@ -1,27 +1,22 @@
-// "use client"
+"use client"
 import React, { Key, memo, useContext, useEffect, useMemo } from 'react'
 import SuggestionCard from './_components/suggestionCard'
 import AddSuggestionButton from './_components/createButton';
 import { useQuery } from '@tanstack/react-query';
 import { getSuggestions } from '@/_lib/data-service';
 import { useGetSuggestions } from '@/_hooks/useSuggestions';
+import { Spin } from 'antd';
 
-const SuggestionPage = async () => {
+const SuggestionPage = () => {
   // ? This is meant to render the suggestions from the database and a button that allows users add their own suggestion
   // ? The suggestions are rendered as cards with the following actions: like, view, and these attributes: image, title, by, category (breakfast, lunch, dinner, any time)
 
 
-  const tempList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const { data: suggestions, isLoading, isError, error } = useQuery({queryKey: ["Suggest"], queryFn: getSuggestions});
 
-  // const { data: suggestions, isLoading, isError, error } = useGetSuggestions();
-  // const suggestions = useMemo(async () => {
-  //   const suggestion =  await getSuggestions();
-  //   return suggestion;
-    
-  // }, []) 
+  if (isLoading) return <div className='text-center'><Spin size='large' /></div>;
 
-  const suggestions = await getSuggestions();
-
+  if (!suggestions) return(<h1 className='text-black text-xl text-center'>We are having trouble loading the data for this page. Please try reloading the page. If problem persists, please contact the administrator and check back later.</h1>);
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 md:gap-5 gap-3 justify-center mx-auto my-0">
