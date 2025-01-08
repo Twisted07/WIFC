@@ -20,7 +20,7 @@ const SuggestionPage = () => {
 
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 md:gap-5 gap-3 justify-center mx-auto my-0">
-      {suggestions.map(suggestion => (<SuggestionCard key={suggestion.id} data={suggestion} />))}
+      {suggestions?.map(suggestion => (<SuggestionCard key={suggestion.id} data={suggestion} />))}
 
       <div className="fixed bottom-10 left-[50%] translate-x-[-50%]">
         <AddSuggestionButton />
