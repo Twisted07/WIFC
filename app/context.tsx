@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Context, createContext, useState } from "react";
+import React, { Context, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 interface IGlobal {
@@ -28,6 +28,10 @@ function MainContextProvider({ children }: any) {
   const [width, setWidth] = useState("60%");
   const [modal, setModal] = useState({open: false, type: ""});
 
+  useEffect(() => {
+    setSignin(Boolean(sessionStorage.getItem("wifc-user")));
+  }, [])
+
   function handleCloseModal() {
     setModal({...modal, open: false});
   }
@@ -42,6 +46,7 @@ function MainContextProvider({ children }: any) {
 
   function handleSignout() {
     setSignin(false);
+    sessionStorage.removeItem("wifc-user");
   }
 
   return (

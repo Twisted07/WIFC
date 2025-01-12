@@ -1,10 +1,11 @@
 "use client"
 
-import { getUsers } from '@/_lib/data-service';
+import { createUser, getUsers } from '@/_lib/data-service';
 import MyInput from '@/_mycomponents/input';
 import PasswordInput from '@/_mycomponents/password';
 import { useMainContext } from '@/context';
-import { useQuery } from '@tanstack/react-query';
+import toast, { Toaster } from 'react-hot-toast';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react'
 
 
@@ -21,14 +22,23 @@ const Signin = () => {
   const [signup, setSignup] = useState(false);
   const [name, setName] = useState("");
 
-  const {handleCloseModal} = useMainContext();
+  const {handleCloseModal, handleSignin} = useMainContext();
 
   const {data: users, error} = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
   })
+  const {mutate: createUserMutate, isPending: createUserLoading, error: createUserError} = useMutation({
+    mutationFn: (data : IUser) => createUser(data),
+  });
   
-  console.log(users, "users");
+  
+  function __reset() {
+    setEmail("");
+    setPasswd("");
+    setSignup(false);
+    setName("");
+  }
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -44,52 +54,55 @@ const Signin = () => {
      */
 
     const user = {
-      email: email,
+      email,
       password: passwd
     };
 
 
     if (error) {
-      alert("An error occurred. Please try again in a few minutes.");
+      toast.error("An error occurred. Please try again in a few minutes.");
+      __reset();
       return;
     }
 
+    const userExists = users?.find((user) => user.email === email);
+    
 
-    const userFound = users?.find((user: IUser) => user.email === email && user.password === passwd);
-
-    if (!userFound) {
+    // Check if user exists
+    if (userExists) {
+      if (passwd !== userExists.password) {
+        toast.error("Incorrect login details.")
+        return;
+      }
+      // If user exists, return user data to session storage
+      toast.success("Signin successful!");
+      sessionStorage.setItem('wifc-user', JSON.stringify(userExists));
+    
+    } else {
       if (!signup) {
-        setSignup(true);
-        return
-
+        setSignup(true); return;
       } else {
-        const updatedUser = {
-          ...user,
-          displayName: name
-        }
+        const updatedUser = { ...user, name }
 
-        // TODO: upload to database
-        createUser();
-        // setSesstion storage
-        sessionStorage.setItem('user', JSON.stringify(updatedUser));
+        createUserMutate(updatedUser);
+        sessionStorage.setItem('wifc-user', JSON.stringify(updatedUser));
       }
     }
 
-    if (userFound) {
-      sessionStorage.setItem('user', JSON.stringify(userFound));
-    }
 
+    handleSignin();
 
-    handleCloseModal();
-
-    setEmail("");
-    setPasswd("");
-
-
+    setTimeout(() => {
+      handleCloseModal();
+      __reset();
+    }, 2000);
   }
+
+
 
   return (
     <div className='text-stone-900'>
+      <Toaster />
       <h1 className='text-3xl font-semibold'>Welcome Foodie!</h1>
       { !signup && <h6 className='text-xl'>Please Sign In to Continue</h6> }
 

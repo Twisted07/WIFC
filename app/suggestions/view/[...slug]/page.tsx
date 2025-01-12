@@ -32,8 +32,6 @@ const ReviewSection = ({params} : {params: {slug: string[]}}) => {
 
   const suggestion = suggestionList[0];
 
-  console.log(reviewData[0], "reviews");
-
   return (
     <div className='text-black w-full'>
       <h1 className='text-4xl font-semibold mb-2 text-center'>{suggestion.name}</h1>

@@ -19,7 +19,6 @@ const ProfilePage = () => {
   }
 
   function handleEdit() {
-    console.log(displayName, "display name");
     toggleEdit("");
   }
 

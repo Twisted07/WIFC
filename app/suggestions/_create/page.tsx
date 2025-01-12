@@ -1,4 +1,3 @@
-import { ISuggestion } from '@/_modules/suggestion';
 import MyButton from '@/_mycomponents/button';
 import MyInput, { errorBorder, greenBorder } from '@/_mycomponents/input';
 import MyLabel from '@/_mycomponents/label';
@@ -7,6 +6,7 @@ import { Checkbox, CheckboxProps, ConfigProvider, Radio } from 'antd';
 import React, { useContext, useState } from 'react'
 
 const CreateSuggestion = () => {
+  const { handleCloseModal } = useMainContext();
   const [mealName, setMealName] = useState("");
   const [description, setDescription] = useState("");
   const [recipe, setRecipe] = useState("");
@@ -15,7 +15,6 @@ const CreateSuggestion = () => {
   const [mealPeriod, setMealPeriod] = useState(["breakfast"]);
 
   const periodOptions = ['breakfast', 'lunch', 'dinner'];
-
   const checkAll = periodOptions.length === mealPeriod.length;
   const indeterminate = mealPeriod.length > 0 && mealPeriod.length < periodOptions.length;
 
@@ -27,7 +26,6 @@ const CreateSuggestion = () => {
     setMealPeriod(e.target.checked ? periodOptions : []);
   };
 
-  const { handleCloseModal } = useMainContext();
 
   function __reset() {
     setMealName("");
@@ -51,8 +49,8 @@ const CreateSuggestion = () => {
       reviews: [],
       suggesterName: "Twisted"
     }
-    console.log("submitting");
-    console.log(suggestionData, "suggestion data");
+
+    // TODO: Handle API call to create suggestion and image creation
 
     handleCloseModal();
     __reset();

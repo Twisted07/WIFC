@@ -32,6 +32,7 @@ const CustomModal = ({ children, onCancel, onSubmit, className, open, width, okT
       onCancel={onCancel}
       onClose={onClose}
       onOk={onSubmit || onCancel}
+      destroyOnClose
       okText={okText}
       cancelText={cancelText}
       width={width || initWidth}

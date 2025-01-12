@@ -6,10 +6,14 @@ import CreateSuggestion from '../_create/page'
 import { MainContext } from '@/context'
 
 const AddSuggestionButton = () => {
-  const { handleCloseModal, modal: {type, open}, openModal } = useContext(MainContext);
+  const { handleCloseModal, modal: {type, open}, openModal, signin } = useContext(MainContext);
+
+  function handleSuggestClick() {
+    signin ? openModal('create_suggestion') : openModal('signin')
+  }
   return (
     <>
-      <Button className='bg-yellow-500 border-2 border-yellow-700 text-stone-100 font-semibold rounded-full' onClick={() => openModal("create_suggestion")}>Suggest Meal</Button>
+      <Button className='bg-yellow-500 border-2 border-yellow-700 text-stone-100 font-semibold rounded-full' onClick={ handleSuggestClick }>Suggest Meal</Button>
 
     {
       type === "create_suggestion" && (

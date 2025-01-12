@@ -31,6 +31,7 @@ const ReviewForm = ({id} : {id: string}) => {
     setDisplayName("");
     setReview("");
     setError("");
+    setRating(3);
   }
 
   function toggleAnon() {
@@ -66,7 +67,7 @@ const ReviewForm = ({id} : {id: string}) => {
      * "email": "string",
      * "displayName": "string",
      * "review": "string",
-     * "rating": "number | string"
+     * "rating": "number"
      * }
      * 
      * ? The form is meant to contain the values used to render the review cards. Since we have the anonymous option, we need to have that handled as well. We should also see how to handle malicious inputs to the database 'cause I currently don't know how to implement strict schema check in the database, so as to forbid wrong payloads. In the meantime, we ensure the data is as clean as possible before sending it to the server.
@@ -90,16 +91,11 @@ const ReviewForm = ({id} : {id: string}) => {
       suggestionID: +id,
     };
     
-    console.log(formData, "formData");
-    console.log(Boolean(email.trim()));
     mutation.mutate(formData);
     
     __reset();
     handleCloseModal();
-
-    // TODO: Send the review to the server
   }
-
 
 
 
