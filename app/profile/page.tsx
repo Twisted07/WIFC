@@ -6,13 +6,15 @@ import React, { useState } from 'react'
 import { FaEdit } from 'react-icons/fa'
 import PasswordEdit from './password'
 import { useMainContext } from '@/context'
+import { useRouter } from 'next/navigation'
 
 const ProfilePage = () => {
   const suggestionList = [1, 2, 3, 4, 5];
+  const navigation = useRouter();
   const [edit, setEdit] = useState("");
   const [displayName, setDisplayName] = useState("Twisted");
 
-  const { openModal, handleCloseModal, modal: {open, type}} = useMainContext();
+  const { openModal, handleCloseModal, modal: {open, type}, signin} = useMainContext();
 
   function toggleEdit(input : string) {
     setEdit(input);
@@ -21,6 +23,8 @@ const ProfilePage = () => {
   function handleEdit() {
     toggleEdit("");
   }
+
+  if (!signin) navigation.push("/suggestions")
 
   return (
     <div>
