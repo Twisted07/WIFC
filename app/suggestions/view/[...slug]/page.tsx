@@ -12,6 +12,7 @@ import { ImageContainer } from '@/suggestions/_components/imageContainer';
 import { MiniImages } from '@/suggestions/_components/miniImages';
 import { Reviews } from '@/suggestions/_components/reviews';
 import { useGetReviewsBySuggestionID } from '@/_hooks/useReview';
+import ImageCarousel from './_components/carousel';
 
 
 
@@ -41,20 +42,10 @@ const ReviewSection = ({params} : {params: {slug: string[]}}) => {
       </div>
       
       <section className='flex flex-col items-center'>
-        <div className='mb-5'>
-          <ImageContainer />
-          <div className='flex gap-3 mt-5'>
-            <MiniImages />
-            <MiniImages />
-            <MiniImages />
-            <MiniImages />
-            <MiniImages />
-            <MiniImages text="View All" />
-          </div>
-        </div>
+        <ImageCarousel images={suggestion.image} />
       </section>
 
-      <section key={suggestion.id} className='border-dashed mt-5'>
+      <section key={suggestion.id} className='border-dashed mt-20'>
         <DescriptionBox heading='Description' content={suggestion.description} type='textarea' />
         { suggestion.recipe && <DescriptionBox heading='How to make/Recipe' type='textarea' content={suggestion.recipe} /> }
         <div key={`${id}container`}>
