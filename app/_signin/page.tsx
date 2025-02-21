@@ -7,6 +7,7 @@ import { useMainContext } from '@/context';
 import toast, { Toaster } from 'react-hot-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react'
+import { Button, Spin } from 'antd';
 
 
 /**
@@ -21,13 +22,14 @@ const Signin = () => {
   const [passwd, setPasswd] = useState("");
   const [signup, setSignup] = useState(false);
   const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {handleCloseModal, handleSignin} = useMainContext();
 
-  const {data: users, error} = useQuery({
-    queryKey: ['users'],
-    queryFn: getUsers,
-  })
+  // const {data: users, error, status, fetchStatus, isPending} = useQuery({
+  //   queryKey: ['users'],
+  //   queryFn: getUsers,
+  // })
   const {mutate: createUserMutate, isPending: createUserLoading, error: createUserError} = useMutation({
     mutationFn: (data : IUser) => createUser(data),
   });
@@ -43,6 +45,8 @@ const Signin = () => {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
+    setIsSubmitting(true)
+
     /**
      * * check if user exists in database
      * * if user exists, return user data to session storage
@@ -53,33 +57,38 @@ const Signin = () => {
      * * reset form
      */
 
+    const users = await getUsers();
+
     const user = {
       email,
       password: passwd
     };
 
 
-    if (error) {
+    // if (error) {
+    if (!users) {
       toast.error("An error occurred. Please try again in a few minutes.");
       __reset();
       return;
     }
 
     const userExists = users?.find((user) => user.email === email);
-    
 
     // Check if user exists
     if (userExists) {
       if (passwd !== userExists.password) {
+        setIsSubmitting(false);
         toast.error("Incorrect login details.")
         return;
       }
       // If user exists, return user data to session storage
+      setIsSubmitting(false);
       toast.success("Signin successful!");
       sessionStorage.setItem('wifc-user', JSON.stringify(userExists));
     
     } else {
       if (!signup) {
+        setIsSubmitting(false);
         setSignup(true); return;
       } else {
         const updatedUser = { ...user, name }
@@ -89,7 +98,7 @@ const Signin = () => {
       }
     }
 
-
+    setIsSubmitting(false);
     handleSignin();
 
     setTimeout(() => {
@@ -98,6 +107,8 @@ const Signin = () => {
     }, 2000);
   }
 
+
+  // if (isPending) return <div className='flex justify-center'><Spin size="large" /></div>
 
 
   return (
@@ -122,7 +133,7 @@ const Signin = () => {
               </div>
             </div>
 
-            <button className='rounded-lg py-2 px-3 border bg-yellow-700 text-stone-100 w-full'>Signin</button>
+            <Button loading={createUserLoading || isSubmitting} htmlType='submit' className='rounded-lg py-2 px-3 border bg-yellow-700 text-stone-100 w-full'>Signin</Button>
           </>)
           :
           <>

@@ -13,6 +13,7 @@ import { MiniImages } from '@/suggestions/_components/miniImages';
 import { Reviews } from '@/suggestions/_components/reviews';
 import { useGetReviewsBySuggestionID } from '@/_hooks/useReview';
 import ImageCarousel from './_components/carousel';
+import { BackButton } from '@/_mycomponents/button';
 
 
 
@@ -26,15 +27,18 @@ const ReviewSection = ({params} : {params: {slug: string[]}}) => {
   const {data: suggestionList, error: errorSuggestionList, isLoading: isLoadingSuggestionList } = useGetSuggestionByID(slug[1]);
   const {data: reviewData, error: errorReviews, isLoading: isLoadingReviews} = useGetReviewsBySuggestionID(slug[1]);
   
-  // ? The returned data from the query is a list with just one value - the suggestion object. So we need to use the first value of the list. If the list is empty, it means the suggestion was not found.
+
+  // ? The returned data from the query is a list with just one value - the suggestion object, so we need to use the first value of the list. If the list is empty, it means the suggestion was not found.
   
   if (isLoadingReviews) return <Spin spinning={true} size="large" />;
-  if(!reviewData || !suggestionList) return <h1>An issue occurred while loading this page. Please try again or contact administrator.</h1>;
+  if(!reviewData || !suggestionList) 
+    { return <h1>An issue occurred while loading this page. Please try again or contact administrator.</h1>; }
 
   const suggestion = suggestionList[0];
 
   return (
     <div className='text-black w-full'>
+      <BackButton />
       <h1 className='text-4xl font-semibold mb-2 text-center'>{suggestion.name}</h1>
       <div className='italic flex justify-center gap-10 mb-3'>
         <span>Suggested by: <strong>{suggestion.suggesterName}</strong></span>
