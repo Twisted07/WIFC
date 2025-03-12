@@ -2,6 +2,7 @@
 
 import React, { Context, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { getUserByEmail } from "./_lib/data-service";
 
 interface IGlobal {
   width: string,
@@ -16,12 +17,12 @@ interface IGlobal {
 
 export const MainContext = createContext<IGlobal>({} as IGlobal);
 
-export function useMainContext() {
-  if (!MainContext) {
-    throw new Error("useMainContext must be used within a MainContextProvider");
+  export function useMainContext() {
+    if (!MainContext) {
+      throw new Error("useMainContext must be used within a MainContextProvider");
+    }
+    return React.useContext(MainContext);
   }
-  return React.useContext(MainContext);
-}
 
 function MainContextProvider({ children }: any) {
   const [signin, setSignin] = useState(false);
@@ -31,6 +32,7 @@ function MainContextProvider({ children }: any) {
   useEffect(() => {
     setSignin(Boolean(sessionStorage.getItem("wifc-user")));
   }, [])
+
 
   function handleCloseModal() {
     setModal({...modal, open: false});

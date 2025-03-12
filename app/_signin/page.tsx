@@ -25,11 +25,6 @@ const Signin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {handleCloseModal, handleSignin} = useMainContext();
-
-  // const {data: users, error, status, fetchStatus, isPending} = useQuery({
-  //   queryKey: ['users'],
-  //   queryFn: getUsers,
-  // })
   const {mutate: createUserMutate, isPending: createUserLoading, error: createUserError} = useMutation({
     mutationFn: (data : IUser) => createUser(data),
   });
@@ -84,7 +79,7 @@ const Signin = () => {
       // If user exists, return user data to session storage
       setIsSubmitting(false);
       toast.success("Signin successful!");
-      sessionStorage.setItem('wifc-user', JSON.stringify(userExists));
+      sessionStorage.setItem('wifc-user', JSON.stringify({email: userExists.email, name: userExists.name}));
     
     } else {
       if (!signup) {
@@ -94,7 +89,7 @@ const Signin = () => {
         const updatedUser = { ...user, name }
 
         createUserMutate(updatedUser);
-        sessionStorage.setItem('wifc-user', JSON.stringify(updatedUser));
+        sessionStorage.setItem('wifc-user', JSON.stringify({email: updatedUser.email, name: updatedUser.name}));
       }
     }
 

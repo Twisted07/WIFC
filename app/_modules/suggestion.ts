@@ -1,7 +1,7 @@
 interface ISuggestion {
   name: string
   id?: string
-  images: any[]
+  image: any[]
   description: string
   duration: string
   recipe: string

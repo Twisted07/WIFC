@@ -64,6 +64,24 @@ export async function deleteSuggestion(id: string) {
   return Suggestion;
 }
 
+export async function fetchUserSuggestions(userId: number) {
+  if (!userId) return;
+
+  const { data: UserSuggestions, error } = await supabase
+  .from('Suggestion')
+  .select("*")
+  .eq('userID', userId)
+
+  if (error) {
+    console.error(error, "error in fetch");
+    throw new Error("An issue occurred while fetching user suggestions");
+  }
+
+  return UserSuggestions;
+}
+
+
+
 // So this is meant to take in the id of the suggestion row and select the review column for update
 export async function createReview(id : string, data : IReview) {
   const { data: Review, error } = await supabase
@@ -140,6 +158,8 @@ export async function getUsers() {
 }
 
 export async function getUserByEmail(email: string) {
+  if (!email) return;
+
   let { data: User, error } = await supabase
   .from('User')
   .select()
@@ -154,7 +174,7 @@ export async function getUserByEmail(email: string) {
   
 }
 
-export async function updateUser(user: IUser, id: number) {
+export async function updateUser(user: Partial<IUser>, id: number) {
   const { data, error } = await supabase
   .from('User')
   .update(user)
@@ -169,6 +189,7 @@ export async function updateUser(user: IUser, id: number) {
   return data;
           
 }
+
 
 export async function deleteUser(id: number) {
   const { error } = await supabase

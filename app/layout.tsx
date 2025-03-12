@@ -37,12 +37,12 @@ export default function RootLayout({
         <html lang="en">
           <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
             <ReactQueryProvider>
-              <Header />
-              <div className="lg:px-16 md:px-10 px-7 lg:py-10 md:py-8 py-6 bg-yellow-50">
-                <div className="max-w-[1150px] min-h-[100vh] mx-auto">
-                  {children}
+                <Header />
+                <div className="lg:px-16 md:px-10 px-7 lg:py-10 md:py-8 py-6 bg-yellow-50">
+                  <div className="max-w-[1150px] min-h-[100vh] mx-auto">
+                    {children}
+                  </div>
                 </div>
-              </div>
             </ReactQueryProvider>
           </body>
         </html>
